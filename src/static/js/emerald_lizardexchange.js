@@ -445,7 +445,7 @@ async function main() {
   const tokens = {}
   const prices = await getEmeraldAndLizardPrices()
   
-  await loadEmeraldChefContract(
+  await loadGeneralEthcallChefContract(
     App,
     tokens,
     prices,
@@ -456,7 +456,9 @@ async function main() {
     'lizard',
     null,
     rewardsPerWeek,
-    'pendingLizard'
+    'pendingLizard',
+    [],
+    'emerald'
   )
 
   hideLoading()
@@ -494,7 +496,7 @@ const lookUpLizardPrices = async function(id_array) {
     }
     if(ids.includes('lizard')){
       let res = await $.ajax({
-        url: 'https://api.lizardexchange.com/tokens/0x6a977d5f48d57ef125c98469d511ef4e0ce44e10',
+        url: 'https://api.lizard.exchange/tokens/0x6a977d5f48d57ef125c98469d511ef4e0ce44e10',
         type: 'GET',
       })
       prices['lizard'] = {

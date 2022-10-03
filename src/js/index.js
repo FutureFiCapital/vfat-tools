@@ -5,30 +5,35 @@
 /** Directories available as aliases
  * all the paths within Dir in globals.js
  */
-import $ from "jquery";
-import { ethers } from "ethers";
-import * as ethcall from "ethcall";
+import $ from "jquery"
+import {ethers} from "ethers"
+import * as ethcall from "ethcall"
+import lodash from "lodash"
+import {matchSorter} from "match-sorter"
 
-//import dompurify from 'dompurify'
+//import dompurify from "dompurify"
 
 import * as myTokens from './token.js';
 
-import 'picturefill'
-import 'utils/errors'
-import 'utils/validation'
-import 'utils/quick';
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import Web3Modal from "web3modal";
+import "picturefill"
+import "utils/errors"
+import "utils/validation"
+import "utils/quick"
+import "core-js/stable"
+import "regenerator-runtime/runtime"
+import WalletConnectProvider from "@walletconnect/web3-provider"
+import Web3Modal from "web3modal"
 
-window.$ = $;
-window.ethers = ethers;
-window.ethcall = ethcall;
-window.asciichart = require("asciichart");
-window.AsciiTable = require("./ascii-table");
-window.Diff = require("diff");
-window.ETHEREUM_NODE_URL = 'aHR0cHM6Ly9tYWlubmV0LmluZnVyYS5pby92My9hNmYzNmI4OWM0OGM0ZmE4YjE0NjYwNWY2ZDdhNWI2Zg==';
+window.$ = $
+window.ethers = ethers
+window.ethcall = ethcall
+window.matchSorter = matchSorter
+window.asciichart = require("asciichart")
+window.AsciiTable = require("./ascii-table")
+window.lodash = lodash
+window.Diff = require("diff")
+window.ETHEREUM_NODE_URL = "aHR0cHM6Ly9tYWlubmV0LmluZnVyYS5pby92My9hNmYzNmI4OWM0OGM0ZmE4YjE0NjYwNWY2ZDdhNWI2Zg=="
+
 window.NETWORKS = {
   ETHEREUM: {
     "chainId": '0x1',
@@ -60,6 +65,96 @@ window.NETWORKS = {
     ],
     "blockExplorerUrls": [
       "https://explorer.arbitrum.io"
+    ]
+  },
+  ASTAR: {
+    "chainId": "0x250",
+    "chainName": "Astar Network",
+    "nativeCurrency": {
+      "name": "Astar",
+      "symbol": "ASTR",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://astar.api.onfinality.io/public"
+    ],
+    "blockExplorerUrls": [
+      "https://blockscout.com/astar/"
+    ]
+  },
+  KAVA: {
+    "chainId": "0x8AE",
+    "chainName": "Kava Network",
+    "nativeCurrency": {
+      "name": "Kava",
+      "symbol": "KAVA",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://evm.kava.io"
+    ],
+    "blockExplorerUrls": [
+      "https://explorer.kava.io"
+    ]
+  },
+  DOGE: {
+    "chainId": "0x7D0",
+    "chainName": "DogeChain",
+    "nativeCurrency": {
+      "name": "wDOGE",
+      "symbol": "wDOGE",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc01-sg.dogechain.dog"
+    ],
+    "blockExplorerUrls": [
+      "https://explorer.dogechain.dog"
+    ]
+  },
+  MILKOMEDA: {
+    "chainId": "0x7D1",
+    "chainName": "Milkomeda C1 Mainnet",
+    "nativeCurrency": {
+      "name": "Mada",
+      "symbol": "mADA",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc-mainnet-cardano-evm.c1.milkomeda.com"
+    ],
+    "blockExplorerUrls": [
+      "https://explorer-mainnet-cardano-evm.c1.milkomeda.com"
+    ]
+  },
+  EVMOS: {
+    "chainId": "0x2329",
+    "chainName": "EVMOS",
+    "nativeCurrency": {
+      "name": "Evmos",
+      "symbol": "EVMOS",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://evmos-rpc2.binary.host"
+    ],
+    "blockExplorerUrls": [
+      "https://evm.evmos.org"
+    ]
+  },
+  HOO: {
+    "chainId": "0x46",
+    "chainName": "Hoo Smart Chain",
+    "nativeCurrency": {
+      "name": "Hoo",
+      "symbol": "HOO",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://http-mainnet.hoosmartchain.com"
+    ],
+    "blockExplorerUrls": [
+      "https://www.hooscan.com"
     ]
   },
   MOONRIVER: {
@@ -121,6 +216,21 @@ window.NETWORKS = {
     ],
     "blockExplorerUrls": [
       "https://explorer.emerald.oasis.dev"
+    ]
+  },
+  DFK: {
+    "chainId": "0xD2AF",
+    "chainName": "DFK Chain",
+    "nativeCurrency": {
+      "name": "defi-kingdoms",
+      "symbol": "JEWEL",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    ],
+    "blockExplorerUrls": [
+      "https://explorer.dfkchain.com"
     ]
   },
   BINANCE_SMART_CHAIN: {
@@ -543,6 +653,21 @@ window.NETWORKS = {
       "https://teloscan.io"
     ],
   },
+  FINDORA: {
+    "chainId": "0x868",
+    "chainName": "Findora EVM Mainnet",
+    "nativeCurrency": {
+      "name": "Findora",
+      "symbol": "FRA",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://rpc-mainnet.findora.org"
+    ],
+    "blockExplorerUrls": [
+      "https://evm.findorascan.io"
+    ],
+  },
 }
 
 const infuraId = atob(window.ETHEREUM_NODE_URL).split('/').pop()
@@ -573,7 +698,8 @@ const providerOptions = {
         333999: "https://rpc.polis.tech",
         25: "https://rpc.crodex.app/",
         82: "https://rpc.meter.io",
-        40: "https://mainnet.telos.net/evm"
+        40: "https://mainnet.telos.net/evm",
+        2152: "https://rpc-mainnet.findora.org"
       }
     }
   }

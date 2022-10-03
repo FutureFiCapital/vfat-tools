@@ -20,7 +20,7 @@ $(function() {
         const startBlock = await COUGAR_CHEF.startBlock();
         const currentBlock = await App.provider.getBlockNumber();
 
-        const blocksPerSeconds = await getAverageBlockTime(App);
+        const blocksPerSeconds = 5.6
 
         if (currentBlock < startBlock) {
             _print(`Rewards start at block <a href="https://cronoscan.com/block/${startBlock}" target="_blank">${startBlock}</a>\n`);
@@ -31,8 +31,8 @@ $(function() {
         const tokens = {};
         const prices = await getCronosPrices();
 
-        const cgsUsdcPoolInfo = await getCronosToken(App, COUGAR_USDC_ADDR, COUGAR_CHEF_ADDR);
-        
+        const cgsUsdcPoolInfo = await getGeneralEthcallToken(App, COUGAR_USDC_ADDR, COUGAR_CHEF_ADDR);
+
         if (cgsUsdcPoolInfo) {
              // Add CGS price
             var q0 = cgsUsdcPoolInfo.q0 / 10 ** 18;
@@ -40,7 +40,7 @@ $(function() {
             prices[COUGAR_ADDR] = {usd: q1 / q0};
         }
 
-        await loadCronosChefContract(App,
+        await loadGeneralEthcallChefContract(App,
             tokens,
             prices,
             COUGAR_CHEF,
@@ -50,7 +50,9 @@ $(function() {
             "cougar",
             null,
             rewardsPerWeek,
-            "pendingCougar");
+            "pendingCougar",
+            [],
+            "cronos");
 
         hideLoading();
     }

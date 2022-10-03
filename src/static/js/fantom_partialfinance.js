@@ -25,7 +25,7 @@ $(function() {
       const BOARDROOM_ADDR = "0x5FcE757a1aa5C489B008a4Df6CA2ef9088B5bCA4";
       const ORACLE_ADDR = "0xDE4196053A30c066Ba8036ef23AF00Ac54F3B4F0";
       const rewardTokenAddress = "0x9486fDA4C1192db69a08CA7235E2E6bAf31B467B"; //PARTIAL
-      const lppAddress = "0x802ed580E7b48abBfaBf6edC73009705CE210d0b"; //PSHARE-FTM-LP
+      const lppAddress = "0xe78c2b734F0e7BD708B1a6d79a0cF8937C4DA278";
       const stakeTicker = "PSHARE";
       const rewardTicker = "PARTIAL";
       const epochsPerDay = 4;
@@ -81,7 +81,7 @@ $(function() {
 
       const rewardTokenAddress = await poolContract.callStatic[rewardTokenFunction]()
 
-      const rewardToken = await getFantomToken(App, rewardTokenAddress, contractAddress)
+      const rewardToken = await getGeneralEthcallToken(App, rewardTokenAddress, contractAddress)
 
       let rewardsPerWeek = 0;
       if(currentTime < startTime){
@@ -96,7 +96,7 @@ $(function() {
       var tokenAddresses = [].concat.apply([], poolInfos.filter(x => x.poolToken).map(x => x.poolToken.tokens))
 
       await Promise.all(tokenAddresses.map(async (address) => {
-          tokens[address] = await getFantomToken(App, address, contractAddress);
+          tokens[address] = await getGeneralEthcallToken(App, address, contractAddress);
       }))
 
       const poolPrices = poolInfos.map( pInfo => pInfo.poolToken ? getPoolPrices(tokens, prices, pInfo.poolToken, "fantom") : undefined);
@@ -159,7 +159,7 @@ $(function() {
           const [, price1, timestamp] = await getCurrentPriceAndTimestamp(App, lppAddress);
           twap = await calculateTwap(oldPrice1, oldTimestamp, price1, timestamp, targetMantissa);
       }
-      if (twap > 1) {
+      if (twap > 0.505) {
           const circulatingSupply = await getCirculatingSupply(App);
           const newTokens = circulatingSupply *  Math.min(twap - 1, maxSupplyIncrease)  * ratio;
           _print(`There will be ${newTokens.toFixed(decimals)} ${rewardTicker} issued at next expansion.`);
@@ -196,7 +196,7 @@ $(function() {
         }
       }
 
-      const poolToken = await getFantomToken(app, poolInfo.token, chefAddress)
+      const poolToken = await getGeneralEthcallToken(app, poolInfo.token, chefAddress)
       const userInfo = await chefContract.userInfo(poolIndex, app.YOUR_ADDRESS)
       const pendingRewardTokens = await chefContract.callStatic[pendingRewardsFunction](poolIndex, app.YOUR_ADDRESS)
       const staked = userInfo.amount / 10 ** poolToken.decimals
