@@ -206,7 +206,8 @@ async function init_ethers() {
         if (localStorage.hasOwnProperty('addr')) {
           App.YOUR_ADDRESS = localStorage.getItem('addr')
         } else {
-          App.YOUR_ADDRESS = window.prompt('Enter your eth address.')
+          App.YOUR_ADDRESS = "0x0000000000000000000000000000000000000000";
+          // App.YOUR_ADDRESS = window.prompt('Enter your eth address.')
         }
       } else {
         let accounts = await App.provider.listAccounts()

@@ -13,7 +13,7 @@ import {matchSorter} from "match-sorter"
 
 //import dompurify from "dompurify"
 
-import * as myTokens from './token.js';
+import * as myTokens from './token';
 
 import "picturefill"
 import "utils/errors"
@@ -30,6 +30,7 @@ window.ethcall = ethcall
 window.matchSorter = matchSorter
 window.asciichart = require("asciichart")
 window.AsciiTable = require("./ascii-table")
+window.LoadHelper = require("utils/load_utils")
 window.lodash = lodash
 window.Diff = require("diff")
 window.ETHEREUM_NODE_URL = "aHR0cHM6Ly9tYWlubmV0LmluZnVyYS5pby92My9hNmYzNmI4OWM0OGM0ZmE4YjE0NjYwNWY2ZDdhNWI2Zg=="
