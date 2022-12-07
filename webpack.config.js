@@ -1,11 +1,12 @@
 const path = require('path')
 const globals = require('./globals')
 const webpack = require('webpack')
+const Dotenv = require('dotenv-webpack')
 
 let isProduction
 
 module.exports = (env = {}) => {
-
+  const cmdlineArgs = Object.fromEntries(Object.entries(env).map(([k, v]) => [`process.env.${k}`, v]));
   isProduction = env.production === true
 
   return {
@@ -45,8 +46,10 @@ module.exports = (env = {}) => {
         SITE_URL: JSON.stringify(globals.SITE_URL),
         DEVELOPER_NAME: JSON.stringify(globals.DEVELOPER_NAME),
         DEVELOPER_URL: JSON.stringify(globals.DEVELOPER_URL),
-        GOOGLE_ANALYTICS_ID: JSON.stringify(globals.GOOGLE_ANALYTICS_ID)
-      })
+        GOOGLE_ANALYTICS_ID: JSON.stringify(globals.GOOGLE_ANALYTICS_ID),
+      }),
+      new webpack.DefinePlugin(cmdlineArgs),
+      new Dotenv()
     ],
     optimization: {
       splitChunks: {
