@@ -127,10 +127,31 @@ $(function() {
     printAlcxContractLinks(App, alcxAbi, alcxAddr, poolIndex, poolInfo.poolToken.address,
       rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
       poolInfo.userStaked, poolInfo.userUnclaimed, rewardPrice);
+  
+  
+    const reward = {
+      rewardTokenAddress: rewardTokenAddress,
+      rewardTokenSymbol: rewardTokenTicker,
+      rewardTokenName: rewardTokenTicker,
+      rewardDailyUsd: poolInfo.rewardsPerWeek * rewardPrice / 7,
+      rewardTokenPrice: rewardPrice,
+      apr: apr.yearlyAPR,
+    };
+  
+    LoadHelper.insertVfatInfo(
+        window.loadTracker,
+        alcxAddr,
+        poolInfo,
+        poolPrices,
+        [reward],
+    );
+    
     return apr;
   }
   
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
+  
     const App = await init_ethers();
     const tokens = {}
   
@@ -203,6 +224,7 @@ $(function() {
       "SUSHI", rewardsSushiPerBlock, "pendingSushi")
   
     hideLoading();
+    await window.loadTracker.completeLoad();
   }
   
   async function loadAlcxSushiContract(App, chef, chefAddress, chefAbi, rewardTokenFunction, rewardsPerWeekFixed, pendingRewardsFunction,
@@ -369,6 +391,27 @@ $(function() {
   printAlcxSushiContractLinks(App, chefAbi, chefAddr, poolIndex, poolInfo.address, rewardTokenTickers, 
     poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, pendingRewards, fixedDecimals, claimFunction, rewardPrices, chain);
+    
+  const rewards = [];
+  for (let i = 0; i < rewardTokenAddresses.length; i++) {
+    rewards.push({
+      rewardTokenAddress: rewardTokenAddresses[i],
+      rewardTokenSymbol: rewardTokenTickers[i],
+      rewardTokenName: rewardTokenTickers[i],
+      rewardDailyUsd: rewardsPerWeek[i] * rewardPrices[i] / 7,
+      rewardTokenPrice: rewardPrices[i],
+      apr: rewardsPerWeek[i] * rewardPrices[i] * 100 * 52 / staked_tvl,}
+    );
+  }
+
+  LoadHelper.insertVfatInfo(
+      window.loadTracker,
+      chefAddr,
+      poolInfo,
+      poolPrices,
+      rewards,
+  );
+  
   return apr;
 }
 

@@ -3,6 +3,7 @@ $(function() {
     });
   
     async function main() {
+      window.loadTracker = LoadHelper.initLoadTracker();
       const App = await init_ethers();
   
       _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -15,8 +16,9 @@ $(function() {
   
       await loadSushiChefContract(App, SUSHI_CHEF, SUSHI_CHEF_ADDR, SUSHI_CHEF_ABI,
           "SUSHI", "SUSHI", null, rewardsPerWeek, "pendingSushi");
-  
+   
       hideLoading();
+      await window.loadTracker.completeLoad();
     }
   
   async function loadSushiChefContract(App, chef, chefAddress, chefAbi, rewardTokenTicker,
@@ -192,6 +194,31 @@ $(function() {
         rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
         poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, rewardPrice, pendingRewarderTokens, rewardRewarderTicker, rewardRewarderPrice);
       _print("");
+  
+      const sushiReward = {
+        rewardTokenAddress: rewardTokenAddress,
+        rewardTokenSymbol: rewardTokenTicker,
+        rewardTokenName: rewardTokenTicker,
+        rewardDailyUsd: rewardsPerWeek * rewardPrice / 7,
+        rewardTokenPrice: rewardPrice,
+        apr: apr.overrideSushiApr,
+      };
+      const rewarderReward = {
+        rewardTokenAddress: poolInfo.rewarderToken.address,
+        rewardTokenSymbol: poolInfo.rewarderToken.symbol,
+        rewardTokenName: poolInfo.rewarderToken.name,
+        rewardDailyUsd: rewarderRewardsPerWeek * rewardRewarderPrice / 7,
+        rewardTokenPrice: rewardRewarderPrice,
+        apr: apr.overrideRewarderApr,
+      };
+      LoadHelper.insertVfatInfo(
+          window.loadTracker,
+          chefAddr,
+          poolInfo,
+          poolPrices,
+          [sushiReward, rewarderReward],
+      );
+
       return apr;
     }
     
@@ -237,7 +264,9 @@ $(function() {
         totalStakedUsd : staked_tvl,
         userStakedPct,
         yearlyAPR : totalYearlyAPR,
-        userYearlyUsd : userYearlyRewards * rewardPrice + userRewarderYearlyRewards * rewardRewarderPrice
+        userYearlyUsd : userYearlyRewards * rewardPrice + userRewarderYearlyRewards * rewardRewarderPrice,
+        overrideSushiApr: yearlyAPR,
+        overrideRewarderApr: yearlyRewarderAPR,
       }
     }
   
@@ -279,6 +308,26 @@ $(function() {
     printSushiNormalContractLinks(App, chefAbi, chefAddr, poolIndex, poolInfo.address, pendingRewardsFunction,
       rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
       poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, rewardPrice, chain, depositFee, withdrawFee);
+    
+    const rewardTokenName = 'rewarderToken' in poolInfo ? poolInfo.rewarderToken.name : "UNKNOWN";
+    
+    const sushiReward = {
+      rewardTokenAddress: rewardTokenAddress,
+      rewardTokenSymbol: rewardTokenTicker,
+      rewardTokenName: rewardTokenName,
+      rewardDailyUsd: rewardsPerWeek * rewardPrice / 7,
+      rewardTokenPrice: rewardPrice,
+      apr: apr.yearlyAPR,
+    };
+    
+    LoadHelper.insertVfatInfo(
+        window.loadTracker,
+        chefAddr,
+        poolInfo,
+        poolPrices,
+        [sushiReward],
+    );
+    
     return apr;
   }
   
