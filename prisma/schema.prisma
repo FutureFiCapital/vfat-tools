@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model dex_events {
+  dex_address Bytes  @id @db.Binary(20)
+  name        String @db.VarChar(255)
+  dexes       dexes  @relation(fields: [dex_address], references: [dex_address], onDelete: NoAction, map: "dex_events_ibfk_1")
+}
+
+model dexes {
+  dex_address Bytes       @id @db.Binary(20)
+  symbol      String      @unique(map: "symbol") @db.VarChar(255)
+  name        String      @unique(map: "name") @db.VarChar(255)
+  dex_events  dex_events?
+  pools       pools[]
+}
+
+model erc20_tokens {
+  token_address                                                Bytes                  @id @db.Binary(20)
+  symbol                                                       String                 @db.VarChar(255)
+  name                                                         String                 @db.VarChar(255)
+  pool_day_token_stats                                         pool_day_token_stats[]
+  pool_tokens                                                  pool_tokens[]
+  vfat_infos                                                   vfat_infos[]
+  vfat_rewards_erc20_tokensTovfat_rewards_reward_token_address vfat_rewards[]         @relation("reward_token_rewards")
+}
+
+model eth_block_headers {
+  block_number Int      @id
+  timestamp    DateTime @db.DateTime(0)
+  logs_bloom   Bytes?   @db.Blob
+  size         Int
+}
+
+model pool_day_token_stats {
+  pool_address  Bytes        @db.Binary(20)
+  date          DateTime     @db.Date
+  token_address Bytes        @db.Binary(20)
+  reserve       Float?       @db.Float
+  volume        Float?       @db.Float
+  pool_days     pool_days    @relation(fields: [pool_address, date], references: [pool_address, date], onDelete: NoAction, map: "pool_day_token_stats_ibfk_1")
+  erc20_tokens  erc20_tokens @relation(fields: [token_address], references: [token_address], onDelete: NoAction, map: "pool_day_token_stats_ibfk_2")
+
+  @@id([pool_address, date, token_address])
+  @@index([token_address], map: "token_address")
+}
+
+model pool_days {
+  pool_address         Bytes                  @db.Binary(20)
+  date                 DateTime               @db.Date
+  liquidity            Float?                 @db.Float
+  tvl_usd              Float?                 @db.Float
+  txns_count           Int?
+  volume_usd           Float?                 @db.Float
+  fees_usd             Float?                 @db.Float
+  open                 Float?                 @db.Float
+  close                Float?                 @db.Float
+  high                 Float?                 @db.Float
+  low                  Float?                 @db.Float
+  tick                 Int?
+  pools                pools                  @relation(fields: [pool_address], references: [pool_address], onDelete: NoAction, map: "pool_days_ibfk_1")
+  pool_day_token_stats pool_day_token_stats[]
+
+  @@id([pool_address, date])
+}
+
+model pool_tokens {
+  pool_address  Bytes        @db.Binary(20)
+  token_address Bytes        @db.Binary(20)
+  pools         pools        @relation(fields: [pool_address], references: [pool_address], onDelete: NoAction, map: "pool_tokens_ibfk_1")
+  erc20_tokens  erc20_tokens @relation(fields: [token_address], references: [token_address], onDelete: NoAction, map: "pool_tokens_ibfk_2")
+
+  @@id([pool_address, token_address])
+  @@index([token_address], map: "token_address")
+}
+
+model pools {
+  pool_address  Bytes         @id @db.Binary(20)
+  dex_address   Bytes         @db.Binary(20)
+  fee           Int?
+  created_block Int?
+  dex           dexes         @relation(fields: [dex_address], references: [dex_address], onDelete: NoAction, map: "pools_ibfk_1")
+  pool_days     pool_days[]
+  pool_tokens   pool_tokens[]
+
+  @@index([dex_address], map: "dex_address")
+}
+
+model uniswap_v2_day_datas {
+  pair_address  Bytes    @db.Binary(20)
+  date          DateTime @db.Date
+  reserve_usd   Float    @db.Float
+  reserve0      Float    @db.Float
+  reserve1      Float    @db.Float
+  volume_token0 Float    @db.Float
+  volume_token1 Float    @db.Float
+  volume_usd    Float    @db.Float
+  txns_count    Int
+
+  @@id([pair_address, date])
+}
+
+model uniswap_v2_pairs {
+  pair_address   Bytes @id @db.Binary(20)
+  token0_address Bytes @db.Binary(20)
+  token1_address Bytes @db.Binary(20)
+
+  @@index([token0_address], map: "token0_address")
+  @@index([token1_address], map: "token1_address")
+}
+
+model uniswap_v3_day_datas {
+  pool_address  Bytes    @db.Binary(20)
+  date          DateTime @db.Date
+  liquidity     Float    @db.Float
+  tvl_usd       Float    @db.Float
+  tx_count      Int
+  volume_usd    Float    @db.Float
+  volume_token0 Float    @db.Float
+  volume_token1 Float    @db.Float
+  fees_usd      Float    @db.Float
+  open          Float    @db.Float
+  close         Float    @db.Float
+  high          Float    @db.Float
+  low           Float    @db.Float
+  tick          Int
+
+  @@id([pool_address, date])
+}
+
+model uniswap_v3_pools {
+  pool_address   Bytes @id @db.Binary(20)
+  token0_address Bytes @db.Binary(20)
+  token1_address Bytes @db.Binary(20)
+  fee_tier       Int
+  created_block  Int
+
+  @@index([token0_address], map: "token0_address")
+  @@index([token1_address], map: "token1_address")
+}
+
+model vfat_batches {
+  batch_id   Int          @id @default(autoincrement())
+  timestamp  DateTime     @default(now()) @db.DateTime(0)
+  vfat_infos vfat_infos[]
+}
+
+model vfat_rewards {
+  info_id              Int
+  reward_token_address Bytes        @db.Binary(20)
+  reward_token_price   Float?       @db.Float
+  reward_daily_usd     Float?       @db.Float
+  apr                  Float?       @db.Float
+  timestamp            DateTime     @default(now()) @db.DateTime(0)
+  vfat_info            vfat_infos   @relation(fields: [info_id], references: [info_id], onDelete: Cascade, map: "vfat_rewards_ibfk_1")
+  reward_token         erc20_tokens @relation("reward_token_rewards", fields: [reward_token_address], references: [token_address], onDelete: NoAction, map: "vfat_rewards_ibfk_2")
+
+  @@id([info_id, reward_token_address])
+  @@index([reward_token_address], map: "reward_token_address")
+}
+
+model vfat_infos {
+  info_id                  Int            @id @default(autoincrement())
+  batch_id                 Int
+  pool_address             Bytes?         @db.Binary(20)
+  staking_contract_address Bytes          @db.Binary(20)
+  staked_token_address     Bytes          @db.Binary(20)
+  timestamp                DateTime       @default(now()) @db.DateTime(0)
+  staked_usd               Float?         @db.Float
+  staked_token_price       Float?         @db.Float
+  staked_token_tvl         Float?         @db.Float
+  vfat_batch               vfat_batches   @relation(fields: [batch_id], references: [batch_id], onDelete: Cascade, map: "vfat_infos_ibfk_1")
+  staked_token             erc20_tokens   @relation(fields: [staked_token_address], references: [token_address], onDelete: NoAction, map: "vfat_infos_ibfk_2")
+  vfat_rewards             vfat_rewards[]
+
+  @@index([batch_id], map: "batch_id")
+  @@index([staked_token_address], map: "staked_token_address")
+}
