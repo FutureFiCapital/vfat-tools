@@ -42,6 +42,9 @@ const pageNetwork = function() {
   if (network.toLowerCase() === 'milkomeda') {
     return window.NETWORKS.MILKOMEDA
   }
+  if (network.toLowerCase() === 'ethw') {
+    return window.NETWORKS.ETHW
+  }
   if (network.toLowerCase() === 'dfk') {
     return window.NETWORKS.DFK
   }
@@ -50,6 +53,9 @@ const pageNetwork = function() {
   }
   if (network.toLowerCase() === 'emerald') {
     return window.NETWORKS.EMERALD
+  }
+  if (network.toLowerCase() === 'canto') {
+    return window.NETWORKS.CANTO
   }
   if (network.toLowerCase() === 'kcc') {
     return window.NETWORKS.KCC
@@ -2258,6 +2264,8 @@ function getUniPrices(tokens, prices, pool, chain="eth")
   else if (pool.symbol.includes("LSLP")) stakeTokenTicker += " LSLP";
   else if (pool.symbol.includes("vAMM")) stakeTokenTicker += " vAMM";
   else if (pool.symbol.includes("HELIX-LP")) stakeTokenTicker += " HELIX-LP";
+  else if (pool.symbol.includes("FISH")) stakeTokenTicker += " FISH LP";
+  else if (pool.symbol.includes("MDEX")) stakeTokenTicker += " MDEX LP";
   else if (pool.symbol.includes("sAMM")) stakeTokenTicker += " sAMM";
   else if (pool.symbol.includes("Wigo-LP")) stakeTokenTicker += " Wigo-LP";
   else if (pool.symbol.includes("PUD-LP")) stakeTokenTicker += " PUD-LP";
@@ -2297,6 +2305,7 @@ function getUniPrices(tokens, prices, pool, chain="eth")
   else if (pool.name.includes("MISTswap LP Token")) stakeTokenTicker += " MistSwap LP";
   else if (pool.name.includes("TANGOswap LP Token")) stakeTokenTicker += " TangoSwap LP";
   else if (pool.name.includes("Flare LP Token")) stakeTokenTicker += " FLP LP";
+  else if (pool.name.includes("UniW")) stakeTokenTicker += " UniW LP";
   else if (pool.symbol.includes("BRUSH-LP")) stakeTokenTicker += " BRUSH LP";
   else if (pool.symbol.includes("APE-LP")) stakeTokenTicker += " APE LP";
   else if (pool.symbol.includes("Galaxy-LP")) stakeTokenTicker += " Galaxy LP";
@@ -2370,6 +2379,7 @@ function getUniPrices(tokens, prices, pool, chain="eth")
           pool.symbol.includes("PUD-LP") ?  `https://info.puddingswap.finance/pair/${pool.address}` :
           pool.symbol.includes("HELIX-LP") ?  `https://helix.finance/data/trading-pool/${pool.address}` :
           pool.symbol.includes("LSLP") ? `https://info.linkswap.app/pair/${pool.address}` :
+          pool.symbol.includes("MDEX") ? `https://info.mdex.com/#/pools/${pool.address}` :
           pool.symbol.includes("Milky-LP") ? `https://milkyway.exchange/` :
           pool.symbol.includes("YLP") ? `https://dexscreener.com/dogechain/yodeswap` :
           pool.symbol.includes("MSLP") ? `https://www.milkyswap.exchange/` :
@@ -2401,14 +2411,16 @@ function getUniPrices(tokens, prices, pool, chain="eth")
                 {
                   "fantom": `https://solidly.exchange`,
                   "metis": `https://hermes.maiadao.io/#/swap`,
-                  "optimism": `https://app.velodrome.finance/swap`
+                  "optimism": `https://app.velodrome.finance/swap`,
+                  "canto": `https://forteswap.xyz/`,
                 }
               [chain]):
               pool.symbol.includes("sAMM") ?  (
                 {
                   "fantom" : `https://solidly.exchange`,
                   "metis" : `https://hermes.maiadao.io/#/swap`,
-                  "optimism" : `https://app.velodrome.finance/swap`
+                  "optimism" : `https://app.velodrome.finance/swap`,
+                  "canto": `https://forteswap.xyz/`,
                 }
               [chain]):
               pool.symbol.includes("ZLK-LP") ?  `https://dex.zenlink.pro/#/info/overview` :
@@ -2421,6 +2433,7 @@ function getUniPrices(tokens, prices, pool, chain="eth")
               pool.symbol.includes("SCLP") ?  `https://analytics.swapperchan.com/pairs/${pool.address}` :
               pool.symbol.includes("DXS") ?  `https://dxstats.eth.link/#/pair/${pool.address}` :
               pool.name.includes("Ubeswap") ?  `https://info.ubeswap.org/pair/${pool.address}` :
+              pool.name.includes("UniW") ?  `https://app.uniwswap.com/#/swap` :
               pool.symbol.includes("dogeshrek-lp") ?  `https://dogeshrek.com` :
               pool.symbol.includes("Farmtom-LP") ?  `https://farmtom.com/swap` :
               pool.symbol.includes("TOMB-V2-LP") ?  `https://swap.tomb.com/#/swap` :
@@ -2490,6 +2503,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
             `https://linkswap.app/#/remove/${t0address}/${t1address}`,
             `https://linkswap.app/#/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
           ] :
+          pool.symbol.includes("FISH") ? [
+            `https://swapfish.fi/add/${t0address}/${t1address}`,
+            `https://swapfish.fi/remove/${t0address}/${t1address}`,
+            `https://swapfish.fi/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
+          ] :
           pool.symbol.includes("STELLA LP") ? [
             `https://app.stellaswap.com/exchange/add/${t0address}/${t1address}`,
             `https://app.stellaswap.com/exchange/remove/${t0address}/${t1address}`,
@@ -2530,6 +2548,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
             `https://milkyway.exchange/swap`,
             `https://milkyway.exchange/swap`
           ] :
+          pool.symbol.includes("MDEX") ? [
+            `https://bsc.mdex.com/#/add/${t0address}/${t1address}`,
+            `https://bsc.mdex.com/#/remove/${t0address}/${t1address}`,
+            `https://bsc.mdex.com/#/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
+          ] :
           pool.symbol.includes("PUD-LP") ? [
             `https://exchange.puddingswap.finance/#/add/${t0address}/${t1address}`,
             `https://exchange.puddingswap.finance/#/remove/${t0address}/${t1address}`,
@@ -2567,6 +2590,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
               `https://whaleswap.finance/add/`,
               `https://whaleswap.finance/add/`,
               `https://whaleswap.finance/swap`
+            ],
+            "canto" : [
+              `https://forteswap.xyz/pool/add-liquidity/`,
+              `https://forteswap.xyz/pool/remove-liquidity/`,
+              `https://forteswap.xyz/`
             ]
           } [chain]):
           pool.symbol.includes("sAMM") ? ({
@@ -2589,6 +2617,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
               `https://whaleswap.finance/add/`,
               `https://whaleswap.finance/add/`,
               `https://whaleswap.finance/swap`
+            ],
+            "canto" : [
+              `https://forteswap.xyz/pool/add-liquidity/`,
+              `https://forteswap.xyz/pool/remove-liquidity/`,
+              `https://forteswap.xyz/`
             ]
           } [chain]):
           pool.symbol.includes("HBLP") ? [
@@ -2755,6 +2788,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
             `https://app.ubeswap.org/#/add/${t0address}/${t1address}`,
             `https://app.ubeswap.org/#/remove/${t0address}/${t1address}`,
             `https://app.ubeswap.org/#/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
+          ] :
+          pool.name.includes("UniW") ? [
+            `https://app.uniwswap.com/#/add/${t0address}/${t1address}`,
+            `https://app.uniwswap.com/#/remove/${t0address}/${t1address}`,
+            `https://app.uniwswap.com/#/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
           ] :
           pool.symbol.includes("VLP") ? [
             `https://app.viralata.finance/add/${t0address}/${t1address}`,
@@ -3381,6 +3419,9 @@ function getErc20Prices(prices, pool, chain="eth") {
     case "milkomeda":
       poolUrl=`https://explorer-mainnet-cardano-evm.c1.milkomeda.com/address/${pool.address}`;
       break;
+    case "ethw":
+      poolUrl=`https://www.oklink.com/en/ethw/address/${pool.address}`;
+      break;
     case "okex":
       poolUrl=`https://www.oklink.com/okexchain/address/${pool.address}`;
       break;
@@ -3416,6 +3457,9 @@ function getErc20Prices(prices, pool, chain="eth") {
       break;
     case "cronos":
       poolUrl=`https://cronoscan.com/address/${pool.address}`;
+      break;
+    case "canto":
+      poolUrl=`https://evm.explorer.canto.io/address/${pool.address}`;
       break;
     case "moonbeam":
       poolUrl=`https://moonscan.io/address/${pool.address}`;
@@ -4064,6 +4108,9 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
       case "milkomeda":
         _print(`<a target="_blank" href="https://explorer-mainnet-cardano-evm.c1.milkomeda.com/address/${info.stakingAddress}#code">Milkomeda Explorer</a>`);
         break;
+      case "ethw":
+        _print(`<a target="_blank" href="https://www.oklink.com/en/ethw/address/${info.stakingAddress}#code">ETHW Explorer</a>`);
+        break;
       case "dfk":
         _print(`<a target="_blank" href="https://subnets.avax.network/defi-kingdoms/dfk-chain/explorer/address/${info.stakingAddress}#code">DFK Explorer</a>`);
         break;
@@ -4102,6 +4149,9 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
         break;
       case "cronos":
         _print(`<a target="_blank" href="https://cronoscan.com/address/${info.stakingAddress}#code">Cronos Scan</a>`);
+        break;
+      case "canto":
+        _print(`<a target="_blank" href="https://evm.explorer.canto.io/address/${info.stakingAddress}#code">CANTO Scan</a>`);
         break;
       case "moonriver":
         _print(`<a target="_blank" https://moonriver.moonscan.io/address/${info.stakingAddress}#code">Moonriver Explorer</a>`);
@@ -4289,6 +4339,8 @@ function getChainExplorerUrl(chain, address){
       return `https://arbiscan.io/address/${address}`;
     case "cronos" :
       return `https://cronoscan.com/address/${address}`;
+    case "canto" :
+      return `https://evm.explorer.canto.io/address/${address}`;
     case "moonbeam" :
       return `https://moonscan.io/address/${address}`;
     case "moonriver" :
@@ -4311,6 +4363,8 @@ function getChainExplorerUrl(chain, address){
       return `https://polygonscan.com/address/${address}`;
     case "milkomeda" :
       return `https://explorer-mainnet-cardano-evm.c1.milkomeda.com/address/${address}`;
+    case "ethw" :
+      return `https://www.oklink.com/en/ethw/address/${address}`;
     case "dfk" :
       return `https://subnets.avax.network/defi-kingdoms/dfk-chain/explorer/address/${address}`;
     case "avax" :

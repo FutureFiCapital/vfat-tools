@@ -113,6 +113,21 @@ window.NETWORKS = {
       "https://explorer.dogechain.dog"
     ]
   },
+  CANTO: {
+    "chainId": "0x1E14",
+    "chainName": "CANTO",
+    "nativeCurrency": {
+      "name": "CANTO",
+      "symbol": "CANTO",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://canto.slingshot.finance"
+    ],
+    "blockExplorerUrls": [
+      "https://evm.explorer.canto.io"
+    ]
+  },
   MILKOMEDA: {
     "chainId": "0x7D1",
     "chainName": "Milkomeda C1 Mainnet",
@@ -187,6 +202,21 @@ window.NETWORKS = {
     ],
     "blockExplorerUrls": [
       "https://moonscan.io/"
+    ]
+  },
+  ETHW: {
+    "chainId": "0x2711",
+    "chainName": "ETHW-mainnet",
+    "nativeCurrency": {
+      "name": "EthereumPoW",
+      "symbol": "ETHW",
+      "decimals": 18
+    },
+    "rpcUrls": [
+      "https://mainnet.ethereumpow.org"
+    ],
+    "blockExplorerUrls": [
+      "https://mainnet.ethwscan.com"
     ]
   },
   OPTIMISM: {
