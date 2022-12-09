@@ -53,13 +53,13 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
         const closeEvents = await buildCommand.result;
         console.log(`Build completed in ${closeEvents[0].timings.durationSeconds.toFixed(2)} seconds`);
     } catch (closeEvents) {
-        console.error(`Build failed with error: ${closeEvents[0].command.error}`);
-        throw closeEvents[0].command.error;
+        console.error(`Build failed`);
+        throw 'Build failed';
     }
  
     const serverCommands = concurrently(
         [
-            { command: `npm run start -- --port=${process.env.VFAT_PORT}`, name: 'vfat' },
+            { command: `npm run vfat-server -- --port=${process.env.VFAT_PORT}`, name: 'vfat' },
             { command: `npm run prisma-server -- --batch=${batch_id}`, name: 'prisma-server' },
         ],
         { killOthers: ['success', 'failure'] }
