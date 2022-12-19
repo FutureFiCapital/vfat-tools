@@ -13,8 +13,6 @@ import {matchSorter} from "match-sorter"
 
 //import dompurify from "dompurify"
 
-import * as myTokens from './token';
-
 import "picturefill"
 import "utils/errors"
 import "utils/validation"
@@ -45,7 +43,7 @@ window.NETWORKS = {
       "decimals": 18
     },
     "rpcUrls": [
-      "https://mainnet.infura.io/v3/" + myTokens.INFURA_API_ID,
+      "https://mainnet.infura.io/v3/" + process.env.INFURA_API_ID,
       "https://api.mycryptoapi.com/eth",
       "https://cloudflare-eth.com"
     ],
@@ -318,7 +316,7 @@ window.NETWORKS = {
       "decimals": 18
     },
     "rpcUrls": [
-      "https://polygon-mainnet.infura.io/v3/" + myTokens.INFURA_API_ID,
+      "https://polygon-mainnet.infura.io/v3/" + process.env.INFURA_API_ID,
       "https://rpc-mainnet.matic.network",
       "https://matic-mainnet.chainstacklabs.com",
       "https://rpc-mainnet.maticvigil.com",
