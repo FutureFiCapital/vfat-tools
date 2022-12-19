@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:18-slim
+FROM node:16-slim
 
 RUN apt-get update && apt-get install -y \
     openssh-client \
