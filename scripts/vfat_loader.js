@@ -61,7 +61,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
     const serverCommands = concurrently(
         [
             { command: `npm run start -- --no-ui --port=${process.env.VFAT_PORT}`, name: 'vfat' },
-            { command: `npm run prisma-server --  --port=${process.env.LOADER_PORT} --batch=${batch_id}`, name: 'prisma-server' },
+            { command: `npm run prisma-server -- --port=${process.env.LOADER_PORT} --batch=${batch_id}`, name: 'prisma-server' },
         ],
         { killOthers: ['success', 'failure'], outputStream: fs.createWriteStream('/dev/null') }
     );
@@ -90,7 +90,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
     });
     
     let browserOptions = { headless: !isTest };
-    if (process.env.VFAT_PORT === 'DOCKER') {
+    if (process.env.ENV === 'DOCKER') {
         browserOptions.executablePath = 'google-chrome-stable';
     }
     const browser = await puppeteer.launch(browserOptions);
