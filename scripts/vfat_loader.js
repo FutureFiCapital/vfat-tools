@@ -51,7 +51,6 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
 
     const buildCommand = concurrently(
         [{ command: 'npm run quick-build', name: 'build' }],
-        {outputStream: fs.createWriteStream('/dev/null')},
     );
     
     console.log('Building...');
@@ -68,7 +67,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
             { command: `npm run start -- --no-ui --port=${process.env.VFAT_PORT}`, name: 'vfat' },
             { command: `npm run prisma-server -- --port=${process.env.LOADER_PORT} --batch=${batch_id}`, name: 'prisma-server' },
         ],
-        { killOthers: ['success', 'failure'], outputStream: fs.createWriteStream('/dev/null') }
+        { killOthers: ['success', 'failure'] }
     );
     
     try {
