@@ -23,7 +23,6 @@ RUN apt-get update \
 # uncomment the following lines to have `dumb-init` as PID 1
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_x86_64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
-ENTRYPOINT ["dumb-init", "--"]
 
 # Uncomment to skip the chromium download when installing puppeteer. If you do,
 # you'll need to launch puppeteer with:
@@ -40,9 +39,10 @@ COPY . .
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /vfat-tools
+    && chown -R pptruser:pptruser /vfat-tools \
+    && chown -R pptruser:pptruser /docker_logs
 
 # Run everything after as non-privileged user.
 USER pptruser
 RUN npx prisma generate
-CMD [ "npm", "run" ]
+ENTRYPOINT ["dumb-init", "--", "npm", "run", "vfat-loader"]
