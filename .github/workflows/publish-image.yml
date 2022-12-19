@@ -44,11 +44,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Add ssh key to agent
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
