@@ -9,6 +9,11 @@ const waitOn = require('wait-on');
 
 dotenv.config();
 
+if (process.env.ENV === 'DOCKER') {
+    let access = fs.createWriteStream('/docker_logs/vfat_loader.log');
+    process.stdout.write = process.stderr.write = access.write.bind(access);
+}
+
 const VFAT_URI = `http://localhost:${process.env.VFAT_PORT}`;
 const PROTOCOLS = [
     'sushiv2',
