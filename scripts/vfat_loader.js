@@ -4,6 +4,7 @@ const concurrently = require('concurrently');
 const puppeteer = require('puppeteer');
 const { ArgumentParser } = require('argparse');
 const { PrismaClient } = require('@prisma/client');
+const waitOn = require('wait-on');
 
 
 dotenv.config();
@@ -44,7 +45,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
     }
 
     const buildCommand = concurrently(
-        [{ command: 'NODE_ENV=development npm-run-all --sequential rmprod copy-to-dist build:*', name: 'build' }],
+        [{ command: 'npm run quick-build', name: 'build' }],
         {outputStream: fs.createWriteStream('/dev/null')},
     );
     
@@ -54,16 +55,25 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
         console.log(`Build completed in ${closeEvents[0].timings.durationSeconds.toFixed(2)} seconds`);
     } catch (closeEvents) {
         console.error(`Build failed`);
-        throw 'Build failed';
+        process.exit(1);
     }
  
     const serverCommands = concurrently(
         [
-            { command: `npm run vfat-server -- --port=${process.env.VFAT_PORT}`, name: 'vfat' },
-            { command: `npm run prisma-server -- --batch=${batch_id}`, name: 'prisma-server' },
+            { command: `npm run start -- --no-ui --port=${process.env.VFAT_PORT}`, name: 'vfat' },
+            { command: `npm run prisma-server --  --port=${process.env.LOADER_PORT} --batch=${batch_id}`, name: 'prisma-server' },
         ],
-        { killOthers: ['success', 'failure'] }
+        { killOthers: ['success', 'failure'], outputStream: fs.createWriteStream('/dev/null') }
     );
+    
+    try {
+        console.log('Waiting for servers to launch...');
+        await waitOn({ resources: [`http://localhost:${process.env.VFAT_PORT}`, `http://localhost:${process.env.LOADER_PORT}`], timeout: 3000 });
+    } catch (err) {
+        console.error('Servers failed to start');
+        console.error(err);
+        process.exit(1);
+    }
     
     serverCommands.result.then(closeEvents => {
         console.error(`Process ${closeEvents[0].command.name} unexpectedly terminated`);
@@ -79,7 +89,11 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
         }
     });
     
-    const browser = await puppeteer.launch({ headless: !isTest });
+    let browserOptions = { headless: !isTest };
+    if (process.env.VFAT_PORT === 'DOCKER') {
+        browserOptions.executablePath = 'google-chrome-stable';
+    }
+    const browser = await puppeteer.launch(browserOptions);
     const page = await browser.newPage();
 
     for (const protocol of selectedProtocols) {
