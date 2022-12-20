@@ -95,7 +95,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
     });
     
     let browserOptions = { headless: !isTest };
-    if (process.env.ENV === 'DOCKER') {
+    if (isDocker) {
         browserOptions.headless = true;
         browserOptions.executablePath = 'google-chrome-stable';
     }
