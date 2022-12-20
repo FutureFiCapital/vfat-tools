@@ -19,6 +19,8 @@ const VFAT_URI = `http://localhost:${process.env.VFAT_PORT}`;
 const PROTOCOLS = [
     'sushiv2',
     'alcx',
+    'aura',
+    'angle',
 ];
 
 const argParser = new ArgumentParser();
