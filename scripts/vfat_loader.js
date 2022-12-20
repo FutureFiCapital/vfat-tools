@@ -11,7 +11,7 @@ dotenv.config();
 
 const isDocker = process.env.ENV === 'DOCKER';
 if (isDocker) {
-    let access = fs.createWriteStream('/docker_logs/vfat_loader.log');
+    let access = fs.createWriteStream('/docker_logs/vfat_loader.log', {flags: 'a'});
     process.stdout.write = process.stderr.write = access.write.bind(access);
 }
 
