@@ -2,9 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const { ArgumentParser } = require('argparse');
 const { PrismaClient } = require('@prisma/client');
+const dotenv = require("dotenv-defaults");
+
+dotenv.config();
 
 const argParser = new ArgumentParser();
-argParser.add_argument('-p', '--port', { type: 'int', default: 3002, help: 'Port to run the server' });
+argParser.add_argument('-p', '--port', { type: 'int', default: process.env.LOADER_PORT, help: 'Port to run the server' });
 argParser.add_argument('-b', '--batch', { type: 'int', default: -1, help: 'Batch ID associated with objects' });
 let args = argParser.parse_args();
 
@@ -21,7 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(args.port, () => {
-    console.log(`Loader listening on port ${args.port}`)
+    console.log(`Prisma loader listening on port ${args.port}`)
 });
 
 

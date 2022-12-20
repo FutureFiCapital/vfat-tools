@@ -49,7 +49,7 @@ module.exports = (env = {}) => {
         GOOGLE_ANALYTICS_ID: JSON.stringify(globals.GOOGLE_ANALYTICS_ID),
       }),
       new webpack.DefinePlugin(cmdlineArgs),
-      new Dotenv({ systemvars: true })
+      new Dotenv({ defaults: true, safe: true})
     ],
     optimization: {
       splitChunks: {

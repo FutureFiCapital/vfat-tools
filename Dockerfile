@@ -43,6 +43,8 @@ RUN groupadd -g 1024 -r pptruser && useradd -r -g pptruser -G audio,video pptrus
     && mkdir -p /docker_logs \
     && chown -R pptruser:pptruser /docker_logs
 
+EXPOSE 3000 3002
+
 # Run everything after as non-privileged user.
 USER pptruser
 RUN npx prisma generate

@@ -1,6 +1,6 @@
-import * as dotenv from 'dotenv';
 import * as fs from 'node:fs';
 const concurrently = require('concurrently');
+const dotenv = require('dotenv-defaults');
 const puppeteer = require('puppeteer');
 const { ArgumentParser } = require('argparse');
 const { PrismaClient } = require('@prisma/client');
@@ -66,7 +66,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
     const serverCommands = concurrently(
         [
             { command: `npm run start -- --no-ui --port=${process.env.VFAT_PORT}`, name: 'vfat' },
-            { command: `npm run prisma-server -- --port=${process.env.LOADER_PORT} --batch=${batch_id}`, name: 'prisma-server' },
+            { command: `npm run prisma-server -- --batch=${batch_id}`, name: 'prisma-server' },
         ],
         { killOthers: ['success', 'failure'] }
     );
