@@ -42,6 +42,7 @@ const PoolsV2 = [
 })
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}`);
@@ -69,6 +70,7 @@ async function main() {
     }
 
     hideLoading();
+    await window.loadTracker.completeLoad();
 }
 
 async function loadMultipleAnglePoolsV2(App, tokens, prices, pools) {
@@ -178,6 +180,7 @@ async function loadAnglePoolInfoV2(App, tokens, prices, stakingAddress, stakingA
 async function printAnglePoolV2(App, info, chain="eth", customURLs) {
     info.poolPrices.print_price(chain, 4, customURLs);
     let totalYearlyAPR = 0
+    let rewards = [];
     for(let i =0; i < info.rewardTokenTickers.length; i++){
       _print(`${info.rewardTokenTickers[i]} Per Week: ${info.weeklyRewards[i].toFixed(2)} ($${formatMoney(info.usdCoinsPerWeek[i])})`);
       const weeklyAPR = info.usdCoinsPerWeek[i] / info.staked_tvl * 100;
@@ -185,6 +188,14 @@ async function printAnglePoolV2(App, info, chain="eth", customURLs) {
       const yearlyAPR = weeklyAPR * 52;
       _print(`APR: Day ${dailyAPR.toFixed(2)}% Week ${weeklyAPR.toFixed(2)}% Year ${yearlyAPR.toFixed(2)}%`);
       totalYearlyAPR += yearlyAPR;
+        rewards.push({
+          rewardTokenAddress: info.rewardTokenAddresses[i],
+          rewardTokenSymbol: info.rewardTokenTickers[i],
+          rewardTokenName: info.rewardTokenTickers[i],
+          rewardDailyUsd: info.usdCoinsPerWeek[i] / 7,
+          rewardPrice: info.usdCoinsPerWeek[i] / info.weeklyRewards[i],
+          apr: yearlyAPR,
+      });
     }
     const userStakedUsd = info.userStaked * info.stakeTokenPrice;
     const userStakedPct = userStakedUsd / info.staked_tvl * 100;
@@ -226,6 +237,19 @@ async function printAnglePoolV2(App, info, chain="eth", customURLs) {
     _print_link(`Revoke (set approval to 0)`, revoke)
     _print_link(`Exit`, exit)
     _print("");
+
+    LoadHelper.insertVfatInfoRaw(
+        window.loadTracker,
+        info.stakingAddress,
+        info.stakeTokenAddress,
+        info.stakeTokenTicker,
+        info.stakeTokenTicker,
+        info.poolPrices.staked_tvl,
+        info.poolPrices.price,
+        info.poolPrices.tvl,
+        rewards,
+        info.stakeTokenAddress, // Staking token is also pool contract
+    );
 
     return {
         staked_tvl: info.poolPrices.staked_tvl,

@@ -3,7 +3,8 @@ consoleInit(main)
   });
 
   async function main() {
-    const App = await init_ethers();
+      window.loadTracker = LoadHelper.initLoadTracker();
+      const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
     _print("Reading smart contracts...\n");
@@ -59,6 +60,7 @@ consoleInit(main)
     }
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }
 
 async function loadMultipleAuraSynthetixPools(App, tokens, prices, pools) {
@@ -238,6 +240,34 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
   }
   _print_link(`Exit`, exit)
   _print("");
+  
+  const auraReward = {
+      rewardTokenAddress: info.rewardTokenAuraAddress,
+      rewardTokenSymbol: info.rewardTokenAuraTicker,
+      rewardTokenName: info.rewardTokenAuraTicker,
+      rewardDailyUsd: info.usdAuraPerWeek,
+      rewardTokenPrice: info.rewardTokenAuraPrice,
+      apr: yearlyAuraAPR,
+  };
+  const rewarderReward = {
+      rewardTokenAddress: info.rewardTokenAddress,
+      rewardTokenSymbol: info.rewardTokenTicker,
+      rewardTokenName: info.rewardTokenTicker,
+      rewardDailyUsd: info.usdPerWeek,
+      rewardTokenPrice: info.rewardTokenPrice,
+      apr: yearlyAPR,
+  };
+  LoadHelper.insertVfatInfoRaw(
+      window.loadTracker,
+      info.stakingAddress,
+      info.stakeTokenAddress,
+      info.stakeTokenTicker,
+      info.stakeTokenTicker,
+      info.staked_tvl,
+      info.poolPrices.price,
+      info.poolPrices.tvl,
+      [auraReward, rewarderReward],
+  );
 
   return {
       staked_tvl: info.poolPrices.staked_tvl,
