@@ -26,11 +26,13 @@ const prisma = new PrismaClient();
 
 argParser.add_argument('-t', '--test', { action: 'store_true', default: false, help: 'run in test mode, batch id is set to -1' });
 argParser.add_argument('-p', '--protocols', { default: null, help: `comma separated list of protocols from: ${PROTOCOLS.join(',')}`, type: 'str'});
+argParser.add_argument('-d', '--debug', { action: 'store_true', default: false, help: 'Print logs for subprocesses'});
 
 (async function main(){
     let args = argParser.parse_args();
     let batch_id;
     const isTest = args.test;
+    const isDebug = args.debug;
     let selectedProtocols = PROTOCOLS;
     if (args.protocols) {
         selectedProtocols = args.protocols.split(',');
@@ -50,8 +52,10 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
         batch_id = -1;
     }
 
+    const commandOutput = isDebug ? fs.createWriteStream('/dev/null') : process.stdout;
     const buildCommand = concurrently(
         [{ command: 'npm run quick-build', name: 'build' }],
+        { outputStream: commandOutput },
     );
     
     console.log('Building...');
@@ -68,7 +72,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
             { command: `npm run start -- --no-ui --port=${process.env.VFAT_PORT}`, name: 'vfat' },
             { command: `npm run prisma-server -- --batch=${batch_id}`, name: 'prisma-server' },
         ],
-        { killOthers: ['success', 'failure'] }
+        { killOthers: ['success', 'failure'] , outputStream: commandOutput}
     );
     
     try {
@@ -94,7 +98,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
         }
     });
     
-    let browserOptions = { headless: !isTest };
+    let browserOptions = { headless: !isTest, dumpio: isDebug };
     if (isDocker) {
         browserOptions.headless = true;
         browserOptions.executablePath = 'google-chrome-stable';
