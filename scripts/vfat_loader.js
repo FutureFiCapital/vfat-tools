@@ -52,7 +52,7 @@ argParser.add_argument('-d', '--debug', { action: 'store_true', default: false, 
         batch_id = -1;
     }
 
-    const commandOutput = isDebug ? fs.createWriteStream('/dev/null') : process.stdout;
+    const commandOutput = isDebug ? process.stdout : fs.createWriteStream('/dev/null');
     const buildCommand = concurrently(
         [{ command: 'npm run quick-build', name: 'build' }],
         { outputStream: commandOutput },
