@@ -9,7 +9,8 @@ const waitOn = require('wait-on');
 
 dotenv.config();
 
-if (process.env.ENV === 'DOCKER') {
+const isDocker = process.env.ENV === 'DOCKER';
+if (isDocker) {
     let access = fs.createWriteStream('/docker_logs/vfat_loader.log');
     process.stdout.write = process.stderr.write = access.write.bind(access);
 }
@@ -95,6 +96,7 @@ argParser.add_argument('-p', '--protocols', { default: null, help: `comma separa
     
     let browserOptions = { headless: !isTest };
     if (process.env.ENV === 'DOCKER') {
+        browserOptions.headless = true;
         browserOptions.executablePath = 'google-chrome-stable';
     }
     const browser = await puppeteer.launch(browserOptions);
