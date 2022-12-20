@@ -46,4 +46,4 @@ RUN groupadd -g 1024 -r pptruser && useradd -r -g pptruser -G audio,video pptrus
 # Run everything after as non-privileged user.
 USER pptruser
 RUN npx prisma generate
-ENTRYPOINT ["dumb-init", "--", "npm", "run", "vfat-loader"]
+ENTRYPOINT ["dumb-init", "--", "npm", "run"]
