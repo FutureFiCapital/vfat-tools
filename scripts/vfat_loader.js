@@ -29,12 +29,16 @@ const prisma = new PrismaClient();
 argParser.add_argument('-t', '--test', { action: 'store_true', default: false, help: 'run in test mode, batch id is set to -1' });
 argParser.add_argument('-p', '--protocols', { default: null, help: `comma separated list of protocols from: ${PROTOCOLS.join(',')}`, type: 'str'});
 argParser.add_argument('-d', '--debug', { action: 'store_true', default: false, help: 'Print logs for subprocesses'});
+argParser.add_argument('-c', '--cooldown', { default: 90, help: '# of seconds to pause between retries to avoid API rate limits', type: 'int'});
+argParser.add_argument('-r', '--retries', { default: 0, help: '# of retries per protocol', type: 'int'});
 
 (async function main(){
     let args = argParser.parse_args();
     let batch_id;
     const isTest = args.test;
     const isDebug = args.debug;
+    const cooldown = args.cooldown;
+    const retries = args.retries;
     let selectedProtocols = PROTOCOLS;
     if (args.protocols) {
         selectedProtocols = args.protocols.split(',');
@@ -87,15 +91,15 @@ argParser.add_argument('-d', '--debug', { action: 'store_true', default: false, 
     }
     
     serverCommands.result.then(closeEvents => {
-        console.error(`Process ${closeEvents[0].command.name} unexpectedly terminated`);
+        console.error(`Process '${closeEvents[0].command.name}' unexpectedly terminated`);
         throw `${closeEvents[0].command.name} unexpectedly completed`;
     }, closeEvents => {
         for (const closeEvent of closeEvents) {
             if (closeEvent.killed) {
-                console.log(`Process ${closeEvent.command.name} stopped`);
+                console.log(`Process '${closeEvent.command.name}' stopped`);
             } else {
-                console.error(`Process ${closeEvent.command.name} failed`);
-                throw `${closeEvents[0].command.name} unexpectedly failed`;
+                console.error(`Process '${closeEvent.command.name}' failed`);
+                throw `Process '${closeEvents[0].command.name}' unexpectedly failed`;
             }
         }
     });
@@ -109,22 +113,38 @@ argParser.add_argument('-d', '--debug', { action: 'store_true', default: false, 
     const page = await browser.newPage();
 
     for (const protocol of selectedProtocols) {
-        try {
-            console.log(`Loading protocol page ${protocol}`);
+        let loaded = false;
+        for (let i = 0; i <= retries; i++) {
+            console.log(`Loading protocol page '${protocol}'`);
             const url = `${VFAT_URI}/${protocol}`;
-            await page.goto(url, {waitUntil: 'load', timeout: 60000});
+            
             try {
+                await page.goto(url, {waitUntil: 'load', timeout: 60000});
                 await page.waitForFunction('window.hasOwnProperty(\'loadTracker\') === true', {timeout: 5000});
             } catch (e) {
-                console.log(`Protocol '${protocol}' not initialized correctly, skipping to next`);
+                console.log(`Protocol '${protocol}' failed to initialize`);
+                console.log(e);
                 continue;
             }
-            await page.waitForFunction('window.loadTracker.loadCompleted === true', {timeout: 60000});
-            const successCount = await page.evaluate('window.loadTracker.successCount');
-            const attemptCount = await page.evaluate('window.loadTracker.attemptCount');
-            console.log(`Successfully loaded ${protocol}, ${successCount} / ${attemptCount} objects loaded`);
-        } catch (error) {
-            console.error(error);
+            try {
+                await page.waitForFunction('window.loadTracker.loadCompleted === true', {timeout: 60000});
+                const successCount = await page.evaluate('window.loadTracker.successCount');
+                const attemptCount = await page.evaluate('window.loadTracker.attemptCount');
+                console.log(`Successfully loaded '${protocol}', ${successCount} / ${attemptCount} objects loaded`);
+                loaded = true;
+            } catch (e) {
+                console.log(`Protocol '${protocol}' failed to complete`);
+                console.log(e);
+            }
+            if (loaded) {
+                break;
+            } else if (i < retries) {
+                console.log(`Load failed, ${retries - i} retries remaining...`);
+                console.log(`Sleeping ${cooldown} seconds for cooldown`);
+                await new Promise(r => setTimeout(r, cooldown * 1000));
+            } else {
+                console.log(`Failed to load '${protocol}'`);
+            }
         }
     }
     console.log('Completed loading')
