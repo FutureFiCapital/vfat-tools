@@ -39,7 +39,7 @@ export function insertVfatInfoRaw(
         stakedTokenPrice,
         stakedTokenTvl,
         rewards,
-        poolAddress = null,
+        poolAddress,
     ).then(
         response => {
             if (!response.ok) {
@@ -106,7 +106,7 @@ export function insertVfatInfo(
         poolPrices.price,
         poolPrices.tvl,
         rewards,
-        poolAddress || poolInfo?.address,
+        poolAddress ?? poolInfo?.address,
     );
 }
 
