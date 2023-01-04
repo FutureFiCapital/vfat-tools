@@ -27,7 +27,7 @@ export function insertVfatInfoRaw(
     stakedTokenPrice,
     stakedTokenTvl,
     rewards = [],
-    poolAddress = null,
+    // poolAddress = null,
 ) {
     loadTracker.attemptCount += 1;
     const resultPromise = insertVfatInfoRawAsync(
@@ -39,7 +39,7 @@ export function insertVfatInfoRaw(
         stakedTokenPrice,
         stakedTokenTvl,
         rewards,
-        poolAddress,
+        // poolAddress,
     ).then(
         response => {
             if (!response.ok) {
@@ -65,14 +65,19 @@ export async function insertVfatInfoRawAsync(
     stakedTokenPrice,
     stakedTokenTvl,
     rewards = [],
-    poolAddress = null,
+    // poolAddress = null,
 ) {
+    // const stakedToken = await getToken(app, stakedTokenAddress, stakingContractAddress);
+    const stakedTokenType = window.localStorage.getItem(stakedTokenAddress);
+    
     const info_data = {
         stakingContractAddress: await stakingContractAddress,
-        poolAddress: await poolAddress,
+        // Can't reliably get pool address 
+        // poolAddress: await stakedToken.address,
         stakedTokenAddress: await stakedTokenAddress,
         stakedTokenSymbol: await stakedTokenSymbol,
         stakedTokenName: await stakedTokenName,
+        stakedTokenType: stakedTokenType,
         stakedUsd: await stakedUsd,
         stakedTokenPrice: await stakedTokenPrice,
         stakedTokenTvl: await stakedTokenTvl,
@@ -129,32 +134,32 @@ export async function buildVfatReward(
 }
 
 
-export async function insertVfatInfoSingleReward(
-    contractAddress,
-    poolInfo,
-    poolPrices,
-) {
-    const rewardData = {
-        rewardTokenAddress: poolInfo.rewarderToken.rewardTokenAddress,
-        rewardTokenSymbol: poolInfo.rewarderToken.symbol,
-        rewardTokenName: poolInfo.rewarderToken.name,  
-    };
-    const info_data = {
-        contractAddress: contractAddress,
-        stakedTokenAddress: poolInfo.poolToken.address,
-        stakedTokenSymbol: poolInfo.poolToken.symbol,
-        stakedTokenName: poolPrices.stakeTokenTicker,
-        stakedUsd: poolPrices.staked_tvl,
-        stakedTokenPrice: poolPrices.price,
-        stakedTokenTvl: poolPrices.tvl,
-        rewards: rewards,
-    };
-    
-    return await fetch(LOADER_URL + '/vfat_infos/create', {
-        method: 'POST',
-        body: JSON.stringify(info_data),
-        headers: {
-            'Content-type': 'application/json; charset=UTF-8'
-        }
-    });
-}
+// export async function insertVfatInfoSingleReward(
+//     contractAddress,
+//     poolInfo,
+//     poolPrices,
+// ) {
+//     const rewardData = {
+//         rewardTokenAddress: poolInfo.rewarderToken.rewardTokenAddress,
+//         rewardTokenSymbol: poolInfo.rewarderToken.symbol,
+//         rewardTokenName: poolInfo.rewarderToken.name,  
+//     };
+//     const info_data = {
+//         contractAddress: contractAddress,
+//         stakedTokenAddress: poolInfo.poolToken.address,
+//         stakedTokenSymbol: poolInfo.poolToken.symbol,
+//         stakedTokenName: poolPrices.stakeTokenTicker,
+//         stakedUsd: poolPrices.staked_tvl,
+//         stakedTokenPrice: poolPrices.price,
+//         stakedTokenTvl: poolPrices.tvl,
+//         rewards: rewards,
+//     };
+//    
+//     return await fetch(LOADER_URL + '/vfat_infos/create', {
+//         method: 'POST',
+//         body: JSON.stringify(info_data),
+//         headers: {
+//             'Content-type': 'application/json; charset=UTF-8'
+//         }
+//     });
+// }

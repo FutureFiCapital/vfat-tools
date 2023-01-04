@@ -248,7 +248,7 @@ async function printAnglePoolV2(App, info, chain="eth", customURLs) {
         info.poolPrices.price,
         info.poolPrices.tvl,
         rewards,
-        info.stakeTokenAddress, // Staking token is also pool contract
+        // info.stakeTokenAddress, // Staking token is also pool contract
     );
 
     return {

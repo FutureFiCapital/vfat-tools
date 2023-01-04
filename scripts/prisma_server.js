@@ -53,6 +53,7 @@ app.post('/vfat_infos/create', async(req, res) => {
             staked_usd: req.body.stakedUsd,
             staked_token_price: req.body.stakedTokenPrice,
             staked_token_tvl: req.body.stakedTokenTvl,
+            staked_token_type: req.body.stakedTokenType,
             
             pool_address:  typeof req.body?.poolAddress === 'string' ? hexToBuffer(req.body.poolAddress) : null,
 

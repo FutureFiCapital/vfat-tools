@@ -257,6 +257,8 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
       rewardTokenPrice: info.rewardTokenPrice,
       apr: yearlyAPR,
   };
+  
+  var poolToken = await getToken(App, info.stakeTokenAddress, info.stakingAddress);
   LoadHelper.insertVfatInfoRaw(
       window.loadTracker,
       info.stakingAddress,
@@ -267,6 +269,7 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
       info.poolPrices.price,
       info.poolPrices.tvl,
       [auraReward, rewarderReward],
+      // insert here
   );
 
   return {
