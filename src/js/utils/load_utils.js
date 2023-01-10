@@ -69,8 +69,12 @@ export async function insertVfatInfoRawAsync(
 ) {
     // const stakedToken = await getToken(app, stakedTokenAddress, stakingContractAddress);
     const stakedTokenType = window.localStorage.getItem(stakedTokenAddress);
+    let currentPath = window.location.pathname;
+    currentPath = currentPath.slice(-1) === '/' ? currentPath.slice(0, -1) : currentPath;
+    let pageName = currentPath.split('/').pop();
     
     const info_data = {
+        vfatPageName: pageName,
         stakingContractAddress: await stakingContractAddress,
         // Can't reliably get pool address 
         // poolAddress: await stakedToken.address,
@@ -99,7 +103,7 @@ export function insertVfatInfo(
     poolInfo,
     poolPrices,
     rewards = [],
-    poolAddress = null,
+    // poolAddress = null,
 ) {
     insertVfatInfoRaw(
         loadTracker,
@@ -111,7 +115,7 @@ export function insertVfatInfo(
         poolPrices.price,
         poolPrices.tvl,
         rewards,
-        poolAddress ?? poolInfo?.address,
+        // poolAddress ?? poolInfo?.address,
     );
 }
 

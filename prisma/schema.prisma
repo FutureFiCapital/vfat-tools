@@ -172,6 +172,7 @@ model vfat_infos {
   staking_contract_address Bytes          @db.Binary(20)
   staked_token_address     Bytes          @db.Binary(20)
   staked_token_type        String?        @db.VarChar(255)
+  vfat_page_name           String?        @db.VarChar(255)
   timestamp                DateTime       @default(now()) @db.DateTime(0)
   staked_usd               Float?         @db.Float
   staked_token_price       Float?         @db.Float

@@ -49,6 +49,7 @@ app.post('/vfat_infos/create', async(req, res) => {
                         name: req.body.stakedTokenName,
                     }
                 }},
+            vfat_page_name: req.body.vfatPageName,
             staking_contract_address: hexToBuffer(req.body.stakingContractAddress),
             staked_usd: req.body.stakedUsd,
             staked_token_price: req.body.stakedTokenPrice,
