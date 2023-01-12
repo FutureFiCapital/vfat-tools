@@ -245,7 +245,7 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
       rewardTokenAddress: info.rewardTokenAuraAddress,
       rewardTokenSymbol: info.rewardTokenAuraTicker,
       rewardTokenName: info.rewardTokenAuraTicker,
-      rewardDailyUsd: info.usdAuraPerWeek,
+      rewardDailyUsd: info.usdAuraPerWeek / 7,
       rewardTokenPrice: info.rewardTokenAuraPrice,
       apr: yearlyAuraAPR,
   };
@@ -253,7 +253,7 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
       rewardTokenAddress: info.rewardTokenAddress,
       rewardTokenSymbol: info.rewardTokenTicker,
       rewardTokenName: info.rewardTokenTicker,
-      rewardDailyUsd: info.usdPerWeek,
+      rewardDailyUsd: info.usdPerWeek / 7,
       rewardTokenPrice: info.rewardTokenPrice,
       apr: yearlyAPR,
   };
