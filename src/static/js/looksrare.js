@@ -6,6 +6,7 @@ consoleInit(main)
   const LOOKS_STAKING_ABI2 = [{"inputs":[{"internalType":"address","name":"_looksRareToken","type":"address"},{"internalType":"address","name":"_rewardToken","type":"address"},{"internalType":"address","name":"_tokenDistributor","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"harvestedAmount","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"harvestedAmount","type":"uint256"}],"name":"Harvest","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"numberBlocks","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rewardPerBlock","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"reward","type":"uint256"}],"name":"NewRewardPeriod","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"harvestedAmount","type":"uint256"}],"name":"Withdraw","type":"event"},{"inputs":[],"name":"PRECISION_FACTOR","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"calculatePendingRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"calculateSharePriceInLOOKS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"calculateSharesValueInLOOKS","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"currentRewardPerBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bool","name":"claimRewardToken","type":"bool"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"harvest","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"lastRewardAdjustment","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastRewardBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastUpdateBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"looksRareToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"periodEndBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"rewardPerTokenStored","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"rewardToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"tokenDistributor","outputs":[{"internalType":"contract TokenDistributor","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalShares","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"reward","type":"uint256"},{"internalType":"uint256","name":"rewardDurationInBlocks","type":"uint256"}],"name":"updateRewards","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userInfo","outputs":[{"internalType":"uint256","name":"shares","type":"uint256"},{"internalType":"uint256","name":"userRewardPerTokenPaid","type":"uint256"},{"internalType":"uint256","name":"rewards","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"shares","type":"uint256"},{"internalType":"bool","name":"claimRewardToken","type":"bool"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"claimRewardToken","type":"bool"}],"name":"withdrawAll","outputs":[],"stateMutability":"nonpayable","type":"function"}]
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
 
     const Pool = {
       address : "0x2a70e7f51f6cd40c3e9956aa964137668cbfadc5",
@@ -37,11 +38,12 @@ consoleInit(main)
   }
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }
 
 async function loadLooksSynthetixPool1(App, tokens, prices, abi, address, rewardTokenFunction, stakeTokenFunction) {
   const info = await loadLooksSynthetixPoolInfo1(App, tokens, prices, abi, address, rewardTokenFunction, stakeTokenFunction);
-  return await printSynthetixPool(App, info);
+  return await printSynthetixPool(App, info, undefined, undefined, true);
 }
 
 async function loadLooksSynthetixPool2(App, tokens, prices, abi, address, rewardTokenFunction, stakeTokenFunction) {
@@ -245,6 +247,9 @@ async function printLooksSynthetixPool2(App, info, chain="eth", customURLs) {
   let totalusdCoinsPerWeek = 0;
   let totalusdCoinsPerYear = 0;
   let totalUSDPerWeek = 0;
+    
+  let rewards = [];
+    
   for(let i = 0; i < info.rewardTokenTickers.length; i++){
     let weeklyAPR = info.usdCoinsPerWeek[i] / info.staked_tvl * 100;
     let dailyAPR = weeklyAPR / 7;
@@ -254,6 +259,14 @@ async function printLooksSynthetixPool2(App, info, chain="eth", customURLs) {
     totalDailyAPR += dailyAPR;
     totalUSDPerWeek += info.usdCoinsPerWeek[i];
     _print(`${info.rewardTokenTickers[i]} Per Week: ${info.weeklyRewards[i].toFixed(2)} ($${formatMoney(info.usdCoinsPerWeek[i])}) APR: Year ${yearlyAPR.toFixed(2)}%`);
+    rewards.push({
+        rewardTokenAddress: info.rewardTokenAddresses[i],
+        rewardTokenSymbol: info.rewardTokenTickers[i],
+        rewardTokenName: info.rewardTokenTickers[i],
+        rewardDailyUsd: info.usdCoinsPerWeek[i] / 7,
+        rewardPrice: info.usdCoinsPerWeek[i] / info.weeklyRewards[i],
+        apr: yearlyAPR,
+    });
   }
   _print(`Total Per Week: $${formatMoney(totalUSDPerWeek)}`);
   _print(`Total APR: Day ${totalDailyAPR.toFixed(4)}% Week ${totalWeeklyAPR.toFixed(2)}% Year ${totalYearlyAPR.toFixed(2)}%`);
@@ -303,7 +316,19 @@ async function printLooksSynthetixPool2(App, info, chain="eth", customURLs) {
   }
   _print_link(`Exit`, exit)
   _print("");
-
+    
+  LoadHelper.insertVfatInfoRaw(
+      window.loadTracker,
+      info.stakingAddress,
+      info.stakeTokenAddress,
+      info.stakeTokenTicker,
+      info.stakeTokenTicker,
+      info.poolPrices.staked_tvl,
+      info.poolPrices.price,
+      info.poolPrices.tvl,
+      rewards,
+  );
+  
   return {
       staked_tvl: info.poolPrices.staked_tvl,
       userStaked : userStakedUsd,

@@ -4050,7 +4050,7 @@ async function loadSynthetixPoolInfo(App, tokens, prices, stakingAbi, stakingAdd
     }
 }
 
-async function printSynthetixPool(App, info, chain="eth", customURLs) {
+async function printSynthetixPool(App, info, chain="eth", customURLs, shouldLoad = false) {
     info.poolPrices.print_price(chain, 4, customURLs);
     _print(`${info.rewardTokenTicker} Per Week: ${info.weeklyRewards.toFixed(2)} ($${formatMoney(info.usdPerWeek)})`);
     const weeklyAPR = info.usdPerWeek / info.staked_tvl * 100;
@@ -4203,7 +4203,30 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
     }
     _print_link(`Exit`, exit)
     _print("");
+  
+    if (shouldLoad) {
+      const reward = {
+        rewardTokenAddress: info.rewardTokenAddress,
+        rewardTokenSymbol: info.rewardTokenTicker,
+        rewardTokenName: info.rewardTokenTicker,
+        rewardDailyUsd: info.usdPerWeek / 7,
+        rewardTokenPrice: info.rewardTokenPrice,
+        apr: yearlyAPR,
+      };
 
+      LoadHelper.insertVfatInfoRaw(
+          window.loadTracker,
+          info.stakingAddress,
+          info.stakeTokenAddress,
+          info.stakeTokenTicker,
+          info.stakeTokenTicker,
+          info.poolPrices.staked_tvl,
+          info.poolPrices.price,
+          info.poolPrices.tvl,
+          [reward],
+      );
+    }
+    
     return {
         staked_tvl: info.poolPrices.staked_tvl,
         userStaked : userStakedUsd,
