@@ -23,6 +23,7 @@ const PROTOCOLS = [
     'angle',
     'convex_frax',
     'looksrare',
+    'pickle',
 ];
 
 const argParser = new ArgumentParser();

@@ -4239,12 +4239,12 @@ async function loadSynthetixPool(App, tokens, prices, abi, address, rewardTokenF
   return await printSynthetixPool(App, info);
 }
 
-async function loadMultipleSynthetixPools(App, tokens, prices, pools) {
+async function loadMultipleSynthetixPools(App, tokens, prices, pools, shouldLoad = false) {
   let totalStaked  = 0, totalUserStaked = 0, individualAPRs = [];
   const infos = await Promise.all(pools.map(p =>
     loadSynthetixPoolInfo(App, tokens, prices, p.abi, p.address, p.rewardTokenFunction, p.stakeTokenFunction)));
   for (const i of infos) {
-    let p = await printSynthetixPool(App, i);
+    let p = await printSynthetixPool(App, i, undefined, undefined, shouldLoad);
     totalStaked += p.staked_tvl || 0;
     totalUserStaked += p.userStaked || 0;
     if (p.userStaked > 0) {
