@@ -21,6 +21,7 @@ const PROTOCOLS = [
     'alcx',
     'aura',
     'angle',
+    'convex_frax',
 ];
 
 const argParser = new ArgumentParser();
