@@ -416,7 +416,7 @@ const lookUpPrices = async function(id_array) {
   for (const id_chunk of chunk(id_array, 50)) {
     let ids = id_chunk.join('%2C')
     let res = await $.ajax({
-      url: 'https://api.coingecko.com/api/v3/simple/price?ids=' + ids + '&vs_currencies=usd',
+      url: LoadHelper.upgradeCoinGeckoUrl('https://api.coingecko.com/api/v3/simple/price?ids=' + ids + '&vs_currencies=usd'),
       type: 'GET',
     })
     for (const [key, v] of Object.entries(res)) {
@@ -431,7 +431,7 @@ const lookUpTokenPrices = async function(id_array) {
   for (const id_chunk of chunk(id_array, 50)) {
     let ids = id_chunk.join('%2C')
     let res = await $.ajax({
-      url: 'https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=' + ids + '&vs_currencies=usd',
+      url: LoadHelper.upgradeCoinGeckoUrl('https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=' + ids + '&vs_currencies=usd'),
       type: 'GET',
     })
     for (const [key, v] of Object.entries(res)) {
@@ -443,7 +443,7 @@ const lookUpTokenPrices = async function(id_array) {
 
 const lookUpPricesHistorical = async function(id, from, to) {
   return $.ajax({
-    url: `https://api.coingecko.com/api/v3/coins/${id}/market_chart/range?vs_currency=usd&from=${from}&to=${to}`,
+    url: LoadHelper.upgradeCoinGeckoUrl(`https://api.coingecko.com/api/v3/coins/${id}/market_chart/range?vs_currency=usd&from=${from}&to=${to}`),
     type: 'GET',
   })
 }

@@ -137,6 +137,18 @@ export async function buildVfatReward(
     }
 }
 
+export function upgradeCoinGeckoUrl(
+    url,
+) {
+    const apiKey = process.env.COINGECKO_API_KEY;
+    if (apiKey === '') {
+        return url;
+    } else {
+        let newUrl = url.replace('api.coingecko.com', 'pro-api.coingecko.com');
+        newUrl += `&x_cg_pro_api_key=${apiKey}`;
+        return newUrl;
+    }
+}
 
 // export async function insertVfatInfoSingleReward(
 //     contractAddress,

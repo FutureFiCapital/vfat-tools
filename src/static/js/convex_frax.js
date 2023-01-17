@@ -79,7 +79,7 @@ async function loadCvxFrxSynthetixPoolInfo(App, tokens, prices, stakingAbi, stak
 
     //newPriceAddresses.push("0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9");
     let aavePrice = await $.ajax({
-      url: 'https://api.coingecko.com/api/v3/simple/price?ids=aave&vs_currencies=usd',
+      url: LoadHelper.upgradeCoinGeckoUrl('https://api.coingecko.com/api/v3/simple/price?ids=aave&vs_currencies=usd'),
       type: 'GET'
     })
     let newPriceAddresses = stakeToken.tokens.filter(x =>
