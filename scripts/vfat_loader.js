@@ -26,6 +26,9 @@ const PROTOCOLS = [
     'bella',
     'botto',
     'convex_frax',
+    'dodo',
+    'enterdao',
+    'harvest-finance',
     'looksrare',
     'pickle',
 ];

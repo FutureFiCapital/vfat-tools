@@ -54,7 +54,7 @@ async function loadPool(App, tokens, prices, stakingAddress, ps=false) {
 
   poolPrices.print_price();
 
-  printAPR(rewardTokenTicker, rewardTokenPrice, weeklyRewards,
+  const apr = printAPR(rewardTokenTicker, rewardTokenPrice, weeklyRewards,
     stakingTokenTicker, staked_tvl, userStaked, stakeTokenPrice, null);
 
   const approveTENDAndStake = async function() {
@@ -76,10 +76,32 @@ async function loadPool(App, tokens, prices, stakingAddress, ps=false) {
   _print_link(`Claim ${earned.toFixed(6)} ${rewardTokenTicker}`, claim)
   _print_link(`Exit`, exit)
   _print(`\n`);
+  
+  const reward = {
+    rewardTokenAddress: rewardTokenAddress,
+    rewardTokenSymbol: rewardTokenTicker,
+    rewardTokenName: rewardTokenTicker,
+    rewardDailyUsd: weeklyRewards * rewardTokenPrice / 7,
+    rewardTokenPrice: rewardTokenPrice,
+    apr: apr.yearlyAPR,
+  };
+  
+  LoadHelper.insertVfatInfoRaw(
+      window.loadTracker,
+      stakeTokenAddress,
+      stakeTokenAddress,
+      stakingTokenTicker,
+      stakingTokenTicker,
+      staked_tvl,
+      stakeTokenPrice,
+      poolPrices.tvl,
+      [reward],
+  );
 }
 
 
 async function main() {
+  window.loadTracker = LoadHelper.initLoadTracker(600);
   const PS = [
     "0x8f5adC58b32D4e5Ca02EAC0E293D35855999436C",
     "0x25550Cccbd68533Fa04bFD3e3AC4D09f9e00Fc50",
@@ -147,4 +169,5 @@ async function main() {
   }
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }

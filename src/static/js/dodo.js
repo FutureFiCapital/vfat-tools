@@ -3,7 +3,7 @@ consoleInit(main)
   });
 
   async function main() {
-
+  window.loadTracker = LoadHelper.initLoadTracker();
   const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -28,6 +28,7 @@ consoleInit(main)
       "getPendingRewardByToken");
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }
 
 async function loadDodoContract0(App, prices, chef, chefAddress, chefAbi,
@@ -378,7 +379,7 @@ async function loadDODOChefContract(App, chef, chefAddress, chefAbi, rewardToken
     if (poolPrices[i]) {
       const apr = printChefPool(App, chefAbi, chefAddress, prices, tokens, poolInfos[i], i, poolPrices[i],
         totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
-        pendingRewardsFunction)
+        pendingRewardsFunction, undefined, undefined, undefined, undefined, undefined, true);
       aprs.push(apr);
     }
   }
