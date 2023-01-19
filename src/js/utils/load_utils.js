@@ -1,8 +1,9 @@
 const LOADER_URL = `http://localhost:${process.env.LOADER_PORT}`;
 
 
-export function initLoadTracker() {
+export function initLoadTracker(loadWait) {
     return {
+        loadWait: loadWait,
         mainCompleted: false,
         loadCompleted: false,
         attemptCount: 0,

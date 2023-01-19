@@ -15,6 +15,7 @@ if (isDocker) {
     process.stdout.write = process.stderr.write = access.write.bind(access);
 }
 
+const DEFAULT_LOAD_WAIT = 60;
 const VFAT_URI = `http://localhost:${process.env.VFAT_PORT}`;
 const PROTOCOLS = [
     'sushiv2',
@@ -130,7 +131,8 @@ argParser.add_argument('-r', '--retries', { default: 0, help: '# of retries per 
                 continue;
             }
             try {
-                await page.waitForFunction('window.loadTracker.loadCompleted === true', {timeout: 60000});
+                const waitOverride = await page.evaluate('window.loadTracker.loadWait');
+                await page.waitForFunction('window.loadTracker.loadCompleted === true', {timeout:  (waitOverride || DEFAULT_LOAD_WAIT) * 1000});
                 const successCount = await page.evaluate('window.loadTracker.successCount');
                 const attemptCount = await page.evaluate('window.loadTracker.attemptCount');
                 console.log(`Successfully loaded '${protocol}', ${successCount} / ${attemptCount} objects loaded`);
