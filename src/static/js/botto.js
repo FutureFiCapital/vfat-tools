@@ -6,7 +6,7 @@ consoleInit(main)
   const BOTTO_STAKING_ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"token","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"address","name":"recipient","type":"address"}],"name":"RecoveryTransfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"staker","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Staked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"staker","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Unstaked","type":"event"},{"inputs":[],"name":"botto","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"botto_","type":"address"}],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token_","type":"address"},{"internalType":"address payable","name":"recipient_","type":"address"}],"name":"recover","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount_","type":"uint256"}],"name":"stake","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"totalStaked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unstake","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userStakes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
 
   async function main() {
-
+    window.loadTracker = LoadHelper.initLoadTracker();
     const Pool = {
       address : "0xf8515Cae6915838543bCD7756F39268CE8F853Fd",
       abi : BOTTO_WETH_STAKING_ABI,
@@ -37,6 +37,7 @@ consoleInit(main)
   }
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }
 
 async function loadBottoSynthetixPool(App, tokens, prices, abi, address, rewardTokenFunction, stakeTokenFunction) {
@@ -272,7 +273,28 @@ async function printBottoLpPool(App, info, chain="eth", customURLs) {
     }
     _print_link(`Exit`, exit)
     _print("");
-
+    
+    const reward = {
+        rewardTokenAddress: info.rewardTokenAddress,
+        rewardTokenSymbol: info.rewardTokenTicker,
+        rewardTokenName: info.rewardTokenTicker,
+        rewardDailyUsd: info.usdPerWeek / 7,
+        rewardTokenPrice: info.rewardTokenPrice,
+        apr: yearlyAPR,
+    };
+    
+    LoadHelper.insertVfatInfoRaw(
+        window.loadTracker,
+        info.stakingAddress,
+        info.stakeTokenAddress,
+        info.stakeTokenTicker,
+        info.stakeTokenTicker,
+        info.staked_tvl,
+        info.stakeTokenPrice,
+        info.poolPrices.tvl,
+        [reward],
+    );
+    
     return {
         staked_tvl: info.poolPrices.staked_tvl,
         userStaked : userStakedUsd,

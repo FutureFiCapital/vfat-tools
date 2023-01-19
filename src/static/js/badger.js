@@ -266,10 +266,14 @@ async function printPool(App, tokens, prices, pool, sharesPerFragment) {
 
   if (userStaked > 0) poolPrices.print_contained_price(userStaked * ratio);
   let index = 0;
+  let rewards = [];
   for (const r of rewardTokens) {
     const res = await getRewards(BADGER_GEYSER, r, prices, poolPrices, totalStaked, ratio,
       userStaked, stakeTokenPrice, settToken, lpToken, sharesPerFragment, index)
-    if (res) index++;
+    if (res) {
+      index++;
+      rewards.push(res);
+    }
   }
 
   const approveUNIAndStake = async () => bUniContract_stake(tokenAddress, settAddress, App);
@@ -284,6 +288,18 @@ async function printPool(App, tokens, prices, pool, sharesPerFragment) {
   _print_link(`Unstake ${userStaked.toFixed(12)} ${settToken.symbol}`, unstake)
   _print_link(`Revoke (set approval to 0)`, revoke)
   _print(`\n`);
+  
+  LoadHelper.insertVfatInfoRaw(
+      window.loadTracker,
+      settAddress,
+      tokenAddress,
+      poolPrices.stakeTokenTicker,
+      pool.name,
+      poolPrices.staked_tvl,
+      poolPrices.price,
+      poolPrices.tvl,
+      rewards,
+  );
 }
 
 const getRewards = async (geyser, rewardTokenAddress, prices, poolPrices, totalStaked,
@@ -339,7 +355,14 @@ const getRewards = async (geyser, rewardTokenAddress, prices, poolPrices, totalS
         + ` Week ${userWeeklyRewards.toFixed(displayDecimals)} ($${formatMoney(userWeeklyRewards*rewardTokenPrice)})`
         + ` Year ${userYearlyRewards.toFixed(displayDecimals)} ($${formatMoney(userYearlyRewards*rewardTokenPrice)})`);
   }
-  return true;
+  return {
+    rewardTokenAddress: rewardTokenAddress,
+    rewardTokenSymbol: rewardTokenTicker,
+    rewardTokenName: rewardTokenTicker,
+    rewardDailyUsd: usdPerWeek / 7,
+    rewardTokenPrice: rewardTokenPrice,
+    apr: yearlyAPR,
+  };
 }
 
 const pools = [
@@ -426,6 +449,7 @@ const pools = [
 ];
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker(600);
     var tokens = {};
     var prices = {};
 
@@ -452,4 +476,5 @@ async function main() {
       }
     }
     hideLoading();
+    await window.loadTracker.completeLoad();
 }

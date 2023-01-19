@@ -3778,7 +3778,7 @@ function printChefContractLinks(App, chefAbi, chefAddr, poolIndex, poolAddress, 
 
 function printChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolIndex, poolPrices,
                        totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
-                       pendingRewardsFunction, fixedDecimals, claimFunction, chain="eth", depositFee=0, withdrawFee=0) {
+                       pendingRewardsFunction, fixedDecimals, claimFunction, chain="eth", depositFee=0, withdrawFee=0, shouldLoad=false) {
   fixedDecimals = fixedDecimals ?? 2;
   const sp = (poolInfo.stakedToken == null) ? null : getPoolPrices(tokens, prices, poolInfo.stakedToken, chain);
   var poolRewardsPerWeek = poolInfo.allocPoints / totalAllocPoints * rewardsPerWeek;
@@ -3796,6 +3796,29 @@ function printChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolInd
   printChefContractLinks(App, chefAbi, chefAddr, poolIndex, poolInfo.address, pendingRewardsFunction,
     rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
+  
+  if (shouldLoad) {
+    const reward = {
+      rewardTokenAddress: rewardTokenAddress,
+      rewardTokenSymbol: rewardTokenTicker,
+      rewardTokenName: rewardTokenTicker,
+      rewardDailyUsd: poolRewardsPerWeek * rewardPrice / 7,
+      rewardTokenPrice: rewardPrice,
+      apr: apr.yearlyAPR,
+    };
+    
+    LoadHelper.insertVfatInfoRaw(
+        window.loadTracker,
+        chefAddr,
+        poolInfo.poolToken.address,
+        poolInfo.poolToken.symbol,
+        poolInfo.poolToken.name,
+        poolPrices.staked_tvl,
+        poolPrices.price,
+        poolPrices.tvl,
+        [reward],
+    );
+  }
   return apr;
 }
 
