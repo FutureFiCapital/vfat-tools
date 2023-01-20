@@ -3,6 +3,7 @@ consoleInit(main)
   });
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -17,12 +18,13 @@ consoleInit(main)
     const rewardsPerWeek = await UNIC_CHEF.unicPerBlock() / 1e18 * 604800 / 13.5;
 
     await loadChefContract(App, UNIC_CHEF, UNIC_CHEF_ADDR, UNIC_CHEF_ABI,
-        "UNIC", "unic", null, rewardsPerWeek, "pendingUnic");
+        "UNIC", "unic", null, rewardsPerWeek, "pendingUnic", undefined, undefined, undefined, true);
 
     await loadXUnicVaultContract(App, XUNIC_VAULT, XUNIC_VAULT_ADDR, XUNIC_VAULT_ABI,
         "XUNIC", "XUNIC", "pendingxUNICs", UNIC_CHEF);
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }
 
 async function loadXUnicVaultContract(App, chef, chefAddress, chefAbi, rewardTokenTicker,

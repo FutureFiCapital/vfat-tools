@@ -3,6 +3,7 @@ consoleInit(main)
   });
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -15,7 +16,8 @@ consoleInit(main)
     const rewardsPerWeek = epoch.rewardPerBlock / 1e18 * 604800 / 13.5;
 
     await loadChefContract(App, JPEG_CHEF, JPEG_CHEF_ADDR, JPEG_CHEF_ABI,
-        "JPEG", "jpeg", null, rewardsPerWeek, "pendingReward");
+        "JPEG", "jpeg", null, rewardsPerWeek, "pendingReward", undefined, undefined, undefined, true);
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }

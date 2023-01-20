@@ -18,7 +18,6 @@ if (isDocker) {
 const DEFAULT_LOAD_WAIT = 60;
 const VFAT_URI = `http://localhost:${process.env.VFAT_PORT}`;
 const PROTOCOLS = [
-    'sushiv2',
     'alcx',
     'aura',
     'angle',
@@ -29,8 +28,14 @@ const PROTOCOLS = [
     'dodo',
     'enterdao',
     'harvest-finance',
+    'jpegd',
     'looksrare',
     'pickle',
+    'stargate',
+    'sushiv2',
+    'synapse',
+    'unicly',
+    'xsigma'
 ];
 
 const argParser = new ArgumentParser();
