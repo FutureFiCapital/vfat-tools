@@ -54,7 +54,11 @@ const main = async() => {
       ["PlutusDAO           ",""                                                                                               , `<a href="/arbitrum/plutusdao"   >Various</a>`,"PLS                ","https://plutusdao.io"],
       ["Radiant             ",""                                                                                               , `<a href="/arbitrum/radiant"     >Various</a>`,"RDNT               ","https://app.radiant.capital"],
       ["Hop Exchange        ",""                                                                                               , `<a href="/arbitrum/hop"         >Various</a>`,"HOP                ","https://app.hop.exchange"],
-      ["SwapFish            ",""                                                                                               , `<a href="/arbitrum/swapfish"    >Various</a>`,"FISH               ","https://swapfish.fi"]
+      ["SwapFish            ",""                                                                                               , `<a href="/arbitrum/swapfish"    >Various</a>`,"FISH               ","https://swapfish.fi"],
+      ["Waterfall Arbitrum  ",""                                                                                               , `<a href="/arbitrum/waterfall"   >Various</a>`,"WATERFALL          ","https://www.defiwaterfall.com"],
+      ["Oreo Swap           ",""                                                                                               , `<a href="/arbitrum/oreo"        >Various</a>`,"OREO               ","https://oreoswap.finance"],
+      ["Sugar Finance       ",""                                                                                               , `<a href="/arbitrum/sugar"       >Various</a>`,"SUGAR              ","https://sugarfinance.io"],
+      ["Waterfall DEX       ",""                                                                                               , `<a href="/arbitrum/wtfdex"      >Various</a>`,"WTFX               ","https://exchange.wtfdex.com/#/swap"]  
     ]
   }
 
