@@ -75,6 +75,7 @@ export async function insertVfatInfoRawAsync(
     let pageName = currentPath.split('/').pop();
     
     const info_data = {
+        networkName: pageNetwork().chainName,
         vfatPageName: pageName,
         stakingContractAddress: await stakingContractAddress,
         // Can't reliably get pool address 

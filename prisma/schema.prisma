@@ -64,8 +64,8 @@ model pool_days {
   high                 Float?                 @db.Float
   low                  Float?                 @db.Float
   tick                 Int?
-  pools                pools                  @relation(fields: [pool_address], references: [pool_address], onDelete: NoAction, map: "pool_days_ibfk_1")
   pool_day_token_stats pool_day_token_stats[]
+  pools                pools                  @relation(fields: [pool_address], references: [pool_address], onDelete: NoAction, map: "pool_days_ibfk_1")
 
   @@id([pool_address, date])
 }
@@ -85,9 +85,9 @@ model pools {
   dex_address   Bytes         @db.Binary(20)
   fee           Int?
   created_block Int?
-  dex           dexes         @relation(fields: [dex_address], references: [dex_address], onDelete: NoAction, map: "pools_ibfk_1")
   pool_days     pool_days[]
   pool_tokens   pool_tokens[]
+  dex           dexes         @relation(fields: [dex_address], references: [dex_address], onDelete: NoAction, map: "pools_ibfk_1")
 
   @@index([dex_address], map: "dex_address")
 }
@@ -113,25 +113,6 @@ model uniswap_v2_pairs {
 
   @@index([token0_address], map: "token0_address")
   @@index([token1_address], map: "token1_address")
-}
-
-model uniswap_v3_day_datas {
-  pool_address  Bytes    @db.Binary(20)
-  date          DateTime @db.Date
-  liquidity     Float    @db.Float
-  tvl_usd       Float    @db.Float
-  tx_count      Int
-  volume_usd    Float    @db.Float
-  volume_token0 Float    @db.Float
-  volume_token1 Float    @db.Float
-  fees_usd      Float    @db.Float
-  open          Float    @db.Float
-  close         Float    @db.Float
-  high          Float    @db.Float
-  low           Float    @db.Float
-  tick          Int
-
-  @@id([pool_address, date])
 }
 
 model uniswap_v3_pools {
@@ -168,19 +149,28 @@ model vfat_rewards {
 model vfat_infos {
   info_id                  Int            @id @default(autoincrement())
   batch_id                 Int
+  vfat_page_name           String?        @db.VarChar(255)
   pool_address             Bytes?         @db.Binary(20)
   staking_contract_address Bytes          @db.Binary(20)
   staked_token_address     Bytes          @db.Binary(20)
   staked_token_type        String?        @db.VarChar(255)
-  vfat_page_name           String?        @db.VarChar(255)
   timestamp                DateTime       @default(now()) @db.DateTime(0)
   staked_usd               Float?         @db.Float
   staked_token_price       Float?         @db.Float
   staked_token_tvl         Float?         @db.Float
+  network_name             String         @db.VarChar(255)
   vfat_batch               vfat_batches   @relation(fields: [batch_id], references: [batch_id], onDelete: Cascade, map: "vfat_infos_ibfk_1")
   staked_token             erc20_tokens   @relation(fields: [staked_token_address], references: [token_address], onDelete: NoAction, map: "vfat_infos_ibfk_2")
+  network                  networks       @relation(fields: [network_name], references: [name], onDelete: NoAction, onUpdate: NoAction, map: "vfat_infos_ibfk_3")
   vfat_rewards             vfat_rewards[]
 
   @@index([batch_id], map: "batch_id")
   @@index([staked_token_address], map: "staked_token_address")
+  @@index([network_name], map: "network_name")
+}
+
+model networks {
+  name       String       @id @db.VarChar(255)
+  symbol     String       @unique(map: "symbol") @db.VarChar(255)
+  vfat_infos vfat_infos[]
 }
