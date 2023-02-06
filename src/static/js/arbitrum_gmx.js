@@ -50,17 +50,19 @@ function getTokenUrl(addr) {
   return `https://arbiscan.io/address/${addr}`
 }
 
-async function loadYieldFarm(App, rewardSources, stakeTokenPrice, stakedTokensAddresses, stakedTokensSymbols) {
+async function loadYieldFarm(App, rewardSources, stakeTokenPrice, stakedTokensAddresses, stakedTokensSymbols, stakedTokenTvl) {
   const reader = new ethers.Contract(addresses.RewardReader, REWARD_READER_ABI, App.provider);
   const totalStaked = await rewardSources[0].tracker.totalSupply() / 1e18
   const totalStakedTvl = totalStaked * stakeTokenPrice
 
-  const rewardsPromise = Promise.all(rewardSources.map(async ({ tracker, tokenSymbol, tokenPrice }) => {
-    const tokensPerInterval = await tracker.tokensPerInterval()
+  const rewardsPromise = Promise.all(rewardSources.map(async ({ tracker, tokenSymbol, tokenPrice, tokenAddress }) => {
+    const tokensPerInterval = await tracker.tokensPerInterval();
+    const rewardToken = await tracker.rewardToken();
     return {
       tokensPerInterval: tokensPerInterval / 1e18,
       tokenSymbol,
-      tokenPrice
+      tokenPrice,
+      tokenAddress: rewardToken,
     }
   }))
   const myDepositBalancesPromise = reader.getDepositBalances(
@@ -79,11 +81,19 @@ async function loadYieldFarm(App, rewardSources, stakeTokenPrice, stakedTokensAd
   const DAY = 86400
   const WEEK = DAY * 7
   let totalWeeklyAPR = 0
-  for (const { tokensPerInterval, tokenPrice, tokenSymbol } of rewards) {
+  let vfatRewards = [];
+  for (const { tokensPerInterval, tokenPrice, tokenSymbol, tokenAddress } of rewards) {
     const perWeek = tokensPerInterval * WEEK
     const weeklyAPR = perWeek * tokenPrice / totalStakedTvl * 100
     totalWeeklyAPR += weeklyAPR
     _print(`${tokenSymbol} Per Week: ${perWeek.toFixed(2)} ($${formatMoney(perWeek * tokenPrice)})`)
+
+    vfatRewards.push({
+      rewardTokenAddress: tokenAddress,
+      rewardDailyUsd: perWeek * tokenPrice / 7,
+      rewardTokenPrice: tokenPrice,
+      apr: weeklyAPR * 52,
+    });
   }
 
   const totalDailyAPR = totalWeeklyAPR / 7
@@ -110,9 +120,20 @@ async function loadYieldFarm(App, rewardSources, stakeTokenPrice, stakedTokensAd
     }
   }
   _print('')
+  
+  LoadHelper.insertVfatInfoNew(
+      App,
+      rewardSources[0].tracker.address,
+      stakedTokensAddresses[0],
+      totalStakedTvl,
+      stakeTokenPrice,
+      stakedTokenTvl,
+      vfatRewards,
+  );
 }
 
 async function main() {
+  window.loadTracker = LoadHelper.initLoadTracker();
   const App = await init_ethers();
 
   _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -153,13 +174,14 @@ async function main() {
   await loadYieldFarm(App, [
     {tracker: stakedGlpTracker, tokenSymbol: 'Escrowed GMX', tokenPrice: gmxPrice},
     {tracker: feeGlpTracker, tokenSymbol: 'ETH', tokenPrice: ethPrice}
-  ], glpPrice, [addresses.FeeGlpTracker], ['GLP'])
+  ], glpPrice, [addresses.FeeGlpTracker], ['GLP'], glpAum)
 
   _print(`<a href="${getTokenUrl(addresses.GMX)}" target="_blank">GMX</a> Price: $${formatMoney(gmxPrice)} Market Cap: $${formatMoney(gmxSupply * gmxPrice)}`)
   await loadYieldFarm(App, [
     {tracker: stakedGmxTracker, tokenSymbol: 'Escrowed GMX', tokenPrice: gmxPrice}, 
     {tracker: feeGmxTracker, tokenSymbol: 'ETH', tokenPrice: ethPrice},
-  ], gmxPrice, [addresses.GMX, addresses.ES_GMX], ['GMX', 'Escrowed GMX'])
+  ], gmxPrice, [addresses.GMX, addresses.ES_GMX], ['GMX', 'Escrowed GMX'], gmxSupply * gmxPrice)
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }

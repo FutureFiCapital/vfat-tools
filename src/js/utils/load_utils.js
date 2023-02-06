@@ -57,6 +57,45 @@ export function insertVfatInfoRaw(
     loadTracker.resultPromises.push(resultPromise);
 }
 
+export function insertVfatInfoNew(
+    app,
+    stakingContractAddress,
+    stakedTokenAddress,
+    stakedUsd,
+    stakedTokenPrice,
+    stakedTokenTvl,
+    rewards = [],
+) {
+    let loadTracker = window.loadTracker;
+    if (loadTracker === 'undefined') {
+        console.log('Load Tracker not initialized correctly, unable to insert row');
+        return;
+    }
+    loadTracker.attemptCount += 1;
+    const resultPromise = insertVfatInfoAsyncNew(
+        app,
+        stakingContractAddress,
+        stakedTokenAddress,
+        stakedUsd,
+        stakedTokenPrice,
+        stakedTokenTvl,
+        rewards,
+    ).then(
+        response => {
+            if (!response.ok) {
+                throw response;
+            }
+            loadTracker.successCount += 1;
+            return response;
+        }
+    ).catch(error => {
+            console.log(`Failed to insert vfat: ${error}`);
+            return null;
+        }
+    );
+    loadTracker.resultPromises.push(resultPromise);
+}
+
 export async function insertVfatInfoRawAsync(
     stakingContractAddress,
     stakedTokenAddress,
@@ -119,6 +158,58 @@ export function insertVfatInfo(
         rewards,
         // poolAddress ?? poolInfo?.address,
     );
+}
+
+
+export async function insertVfatInfoAsyncNew(
+    app,
+    stakingContractAddress,
+    stakedTokenAddress,
+    stakedUsd,
+    stakedTokenPrice,
+    stakedTokenTvl,
+    rewards = [],
+) {
+    const stakedToken = await getToken(app, stakedTokenAddress, stakingContractAddress);
+    const stakedTokenType = window.localStorage.getItem(stakedTokenAddress);
+    let currentPath = window.location.pathname;
+    currentPath = currentPath.slice(-1) === '/' ? currentPath.slice(0, -1) : currentPath;
+    let pageName = currentPath.split('/').pop();
+
+    let completeRewards = [];
+    for (const reward of rewards) {
+        let token = await getToken(app, reward.rewardTokenAddress, stakingContractAddress);
+        completeRewards.push({
+            rewardTokenAddress: token.address,
+            rewardTokenSymbol: token.symbol,
+            rewardTokenName: token.name,
+            rewardDailyUsd: reward.rewardDailyUsd,
+            rewardTokenPrice: reward.rewardTokenPrice,
+            apr: reward.apr,
+        });
+    }
+    
+    const info_data = {
+        networkName: pageNetwork().chainName,
+        vfatPageName: pageName,
+        stakingContractAddress: stakingContractAddress,
+        stakedTokenAddress: stakedTokenAddress,
+        stakedTokenSymbol: stakedToken.symbol,
+        stakedTokenName: stakedToken.name,
+        stakedTokenType: stakedTokenType,
+        stakedUsd: stakedUsd,
+        stakedTokenPrice: stakedTokenPrice,
+        stakedTokenTvl: stakedTokenTvl,
+        rewards: completeRewards,
+    };
+    
+    return await fetch(LOADER_URL + '/vfat_infos/create', {
+        method: 'POST',
+        body: JSON.stringify(info_data),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
 }
 
 export async function buildVfatReward(

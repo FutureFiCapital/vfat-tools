@@ -17,7 +17,7 @@ if (isDocker) {
 
 const DEFAULT_LOAD_WAIT = 60;
 const VFAT_URI = `http://localhost:${process.env.VFAT_PORT}`;
-const PROTOCOLS = [
+const ETH_PROTOCOLS = [
     'alcx',
     'aura',
     'angle',
@@ -37,12 +37,25 @@ const PROTOCOLS = [
     'unicly',
     'xsigma'
 ];
+const ARB_PROTOCOLS = ['gmx'];
+
+const NETWORK_MAP = {
+    'Ethereum': {
+        path: '/',
+        allProtocols: ETH_PROTOCOLS,
+    },
+    'Arbitrum': {
+        path: '/arbitrum/',
+        allProtocols: ARB_PROTOCOLS,
+    },
+};
 
 const argParser = new ArgumentParser();
 const prisma = new PrismaClient();
 
 argParser.add_argument('-t', '--test', { action: 'store_true', default: false, help: 'run in test mode, batch id is set to -1' });
-argParser.add_argument('-p', '--protocols', { default: null, help: `comma separated list of protocols from: ${PROTOCOLS.join(',')}`, type: 'str'});
+argParser.add_argument('--ethereum', { const: ETH_PROTOCOLS.join(','), help: 'load ethereum protocols, follow with comma separated list to specify protocols', type: 'str', nargs: '?'});
+argParser.add_argument('--arbitrum', { const: ARB_PROTOCOLS.join(','), help: 'load arbitrum protocols, follow with comma separated list to specify protocols', type: 'str', nargs: '?'});
 argParser.add_argument('-d', '--debug', { action: 'store_true', default: false, help: 'Print logs for subprocesses'});
 argParser.add_argument('-c', '--cooldown', { default: 90, help: '# of seconds to pause between retries to avoid API rate limits', type: 'int'});
 argParser.add_argument('-r', '--retries', { default: 0, help: '# of retries per protocol', type: 'int'});
@@ -54,11 +67,17 @@ argParser.add_argument('-r', '--retries', { default: 0, help: '# of retries per 
     const isDebug = args.debug;
     const cooldown = args.cooldown;
     const retries = args.retries;
-    let selectedProtocols = PROTOCOLS;
-    if (args.protocols) {
-        selectedProtocols = args.protocols.split(',');
+    let networks = {};
+
+    if (args.ethereum) {
+        networks['Ethereum'] = NETWORK_MAP['Ethereum'];
+        networks['Ethereum'].selectedProtocols = args.ethereum.split(',');
     }
-    
+    if (args.arbitrum) {
+        networks['Arbitrum'] = NETWORK_MAP['Arbitrum'];
+        networks['Arbitrum'].selectedProtocols = args.arbitrum.split(',');
+    }
+
     if (!isTest) {
         try {
             const createBatch = await prisma.vfat_batches.create({ data: {} });
@@ -98,7 +117,7 @@ argParser.add_argument('-r', '--retries', { default: 0, help: '# of retries per 
     
     try {
         console.log('Waiting for servers to launch...');
-        await waitOn({ resources: [`http://localhost:${process.env.VFAT_PORT}`, `http://localhost:${process.env.LOADER_PORT}`], timeout: 3000 });
+        await waitOn({ resources: [`http://localhost:${process.env.VFAT_PORT}`, `http://localhost:${process.env.LOADER_PORT}`], timeout: 5000 });
     } catch (err) {
         console.error('Servers failed to start');
         console.error(err);
@@ -127,39 +146,44 @@ argParser.add_argument('-r', '--retries', { default: 0, help: '# of retries per 
     const browser = await puppeteer.launch(browserOptions);
     const page = await browser.newPage();
 
-    for (const protocol of selectedProtocols) {
+    for (const [networkName, network] of Object.entries(networks)) {
         let loaded = false;
-        for (let i = 0; i <= retries; i++) {
-            console.log(`Loading protocol page '${protocol}'`);
-            const url = `${VFAT_URI}/${protocol}`;
-            
-            try {
-                await page.goto(url, {waitUntil: 'load', timeout: 60000});
-                await page.waitForFunction('window.hasOwnProperty(\'loadTracker\') === true', {timeout: 5000});
-            } catch (e) {
-                console.log(`Protocol '${protocol}' failed to initialize`);
-                console.log(e);
-                continue;
-            }
-            try {
-                const waitOverride = await page.evaluate('window.loadTracker.loadWait');
-                await page.waitForFunction('window.loadTracker.loadCompleted === true', {timeout:  (waitOverride || DEFAULT_LOAD_WAIT) * 1000});
-                const successCount = await page.evaluate('window.loadTracker.successCount');
-                const attemptCount = await page.evaluate('window.loadTracker.attemptCount');
-                console.log(`Successfully loaded '${protocol}', ${successCount} / ${attemptCount} objects loaded`);
-                loaded = true;
-            } catch (e) {
-                console.log(`Protocol '${protocol}' failed to complete`);
-                console.log(e);
-            }
-            if (loaded) {
-                break;
-            } else if (i < retries) {
-                console.log(`Load failed, ${retries - i} retries remaining...`);
-                console.log(`Sleeping ${cooldown} seconds for cooldown`);
-                await new Promise(r => setTimeout(r, cooldown * 1000));
-            } else {
-                console.log(`Failed to load '${protocol}'`);
+        let protocols = network.selectedProtocols;
+        let path = network.path;
+        console.log(`Loading the following protocols from '${networkName}': ${protocols.join(', ')}`);
+        for (const protocol of protocols) {
+            for (let i = 0; i <= retries; i++) {
+                console.log(`Loading '${networkName}' protocol page '${protocol}'`);
+                const url = `${VFAT_URI}${path}${protocol}`;
+        
+                try {
+                    await page.goto(url, {waitUntil: 'load', timeout: 60000});
+                    await page.waitForFunction('window.hasOwnProperty(\'loadTracker\') === true', {timeout: 5000});
+                } catch (e) {
+                    console.log(`Protocol '${protocol}' failed to initialize`);
+                    console.log(e);
+                    continue;
+                }
+                try {
+                    const waitOverride = await page.evaluate('window.loadTracker.loadWait');
+                    await page.waitForFunction('window.loadTracker.loadCompleted === true', {timeout: (waitOverride || DEFAULT_LOAD_WAIT) * 1000});
+                    const successCount = await page.evaluate('window.loadTracker.successCount');
+                    const attemptCount = await page.evaluate('window.loadTracker.attemptCount');
+                    console.log(`Successfully loaded '${protocol}', ${successCount} / ${attemptCount} objects loaded`);
+                    loaded = true;
+                } catch (e) {
+                    console.log(`Protocol '${protocol}' failed to complete`);
+                    console.log(e);
+                }
+                if (loaded) {
+                    break;
+                } else if (i < retries) {
+                    console.log(`Load failed, ${retries - i} retries remaining...`);
+                    console.log(`Sleeping ${cooldown} seconds for cooldown`);
+                    await new Promise(r => setTimeout(r, cooldown * 1000));
+                } else {
+                    console.log(`Failed to load '${protocol}'`);
+                }
             }
         }
     }
