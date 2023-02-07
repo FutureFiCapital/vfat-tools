@@ -18,6 +18,10 @@ export function initLoadTracker(loadWait) {
     };
 }
 
+export function shouldLoad() {
+    return window.loadTracker && !window.loadTracker.mainCompleted;
+}
+
 export function insertVfatInfoRaw(
     loadTracker,
     stakingContractAddress,

@@ -951,6 +951,24 @@ function printArbitrumChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo,
   printArbitrumChefContractLinks(App, chefAbi, chefAddr, poolIndex, poolInfo.address, pendingRewardsFunction,
     rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
+  
+  if (LoadHelper.shouldLoad()) {
+    LoadHelper.insertVfatInfoNew(
+        App,
+        chefAddr,
+        poolInfo.poolToken.address,
+        poolPrices.staked_tvl,
+        poolPrices.price,
+        poolPrices.tvl,
+        [{
+          rewardTokenAddress: rewardTokenAddress,
+          rewardDailyUsd: poolRewardsPerWeek * rewardPrice / 7,
+          rewardTokenPrice: rewardPrice,
+          apr: apr.yearlyAPR,
+        }],
+    );
+  }
+
   return apr;
 }
 
@@ -1141,7 +1159,24 @@ async function printArbitrumSynthetixPool(App, info, chain = "eth", customURLs) 
   }
   _print_link(`Exit`, exit)
   _print("");
-
+  
+  if (LoadHelper.shouldLoad()) {
+    LoadHelper.insertVfatInfoNew(
+        App,
+        info.stakingAddress,
+        info.stakeTokenAddress,
+        info.poolPrices.staked_tvl,
+        info.poolPrices.price,
+        info.poolPrices.tvl,
+        [{
+          rewardTokenAddress: info.rewardTokenAddress,
+          rewardDailyUsd: info.usdPerWeek / 7,
+          rewardTokenPrice: info.rewardTokenPrice,
+          apr: yearlyAPR,
+        }],
+    );
+  }
+  
   return {
     staked_tvl: info.poolPrices.staked_tvl,
     userStaked: userStakedUsd,

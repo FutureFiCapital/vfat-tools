@@ -37,7 +37,39 @@ const ETH_PROTOCOLS = [
     'unicly',
     'xsigma'
 ];
-const ARB_PROTOCOLS = ['gmx'];
+const ARB_PROTOCOLS = [
+    'arballz',
+    'arbidolphin',
+    'arbifarm',
+    'arbikiwi',
+    'arbiz',
+    'dodo',
+    'dopex',
+    'frost',
+    'gmx',
+    'honeypot',
+    'hop',
+    'jaguar',
+    'jones',
+    'l2swap',
+    'marvin',
+    'nyan',
+    'onyx',
+    'oreo',
+    'pickle',
+    'plutusdao',
+    'polarbi',
+    'radiant',
+    'stargate',
+    'sugar',
+    'sushi',
+    'swapfish',
+    'synapse',
+    'vesta',
+    'waterfall',
+    'whalesfinance',
+    'wtfdex',
+];
 
 const NETWORK_MAP = {
     'Ethereum': {

@@ -60,6 +60,7 @@ window.NETWORKS = {
       "decimals": 18
     },
     "rpcUrls": [
+      "https://arbitrum-mainnet.infura.io/v3/" + process.env.INFURA_API_ID,
       "https://arb1.arbitrum.io/rpc"
     ],
     "blockExplorerUrls": [

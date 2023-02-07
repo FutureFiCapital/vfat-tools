@@ -12,6 +12,7 @@ const Pools = [...Array(N_POOLS).keys()].map(pid => ({
 }))
 
 async function main() {
+  window.loadTracker = LoadHelper.initLoadTracker();
   const App = await init_ethers();
 
   _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -27,6 +28,7 @@ async function main() {
   }
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }
 
 async function loadMultipleJonesSynthetixPools(App, tokens, prices, pools) {

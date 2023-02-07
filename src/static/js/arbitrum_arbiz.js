@@ -279,6 +279,7 @@ const ARBIZ_CHEF_ABI = [{
 }]
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -302,4 +303,5 @@ async function main() {
         "token", null, rewardsPerWeek, "pendingToken");
 
     hideLoading();
+    await window.loadTracker.completeLoad();
 }

@@ -5,6 +5,7 @@ consoleInit(main)
 
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -25,7 +26,8 @@ async function main() {
         "PICKLE", null, rewardsPerWeek, "pendingPickle");
 
     hideLoading();
-  }
+    await window.loadTracker.completeLoad();
+}
 
   async function getPicklePoolInfo(app, chefContract, chefAddress, poolIndex, pendingRewardsFunction) {
   const poolInfo = await chefContract.poolInfo(poolIndex);
