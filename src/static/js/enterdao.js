@@ -161,7 +161,7 @@ async function printEnterdaoPool(App, info, chain="eth", customURLs) {
         apr: yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         window.loadTracker,
         info.stakingAddress,
         info.stakingToken,

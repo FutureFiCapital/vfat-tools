@@ -194,7 +194,7 @@ $(function() {
   _print_link(`Exit`, exit)
   _print("");
   
-  LoadHelper.insertVfatInfoNew(
+  LoadHelper.insertVfatInfo(
       App,
       info.stakingAddress,
       info.stakeTokenAddress,

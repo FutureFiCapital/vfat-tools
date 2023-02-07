@@ -3851,7 +3851,7 @@ function printChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolInd
       apr: apr.yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         App,
         chefAddr,
         poolInfo.poolToken.address,
@@ -4280,7 +4280,7 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
         apr: yearlyAPR,
       };
 
-      LoadHelper.insertVfatInfoNew(
+      LoadHelper.insertVfatInfo(
           App,
           info.stakingAddress,
           info.stakeTokenAddress,

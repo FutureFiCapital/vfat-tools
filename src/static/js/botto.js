@@ -281,7 +281,7 @@ async function printBottoLpPool(App, info, chain="eth", customURLs) {
         apr: yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         App,
         info.stakingAddress,
         info.stakeTokenAddress,

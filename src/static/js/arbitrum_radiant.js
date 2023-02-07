@@ -170,7 +170,7 @@ function printRDNTChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poo
     rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
   
-  LoadHelper.insertVfatInfoNew(
+  LoadHelper.insertVfatInfo(
       App,
       chefAddr,
       poolInfo.poolToken.address,

@@ -207,7 +207,7 @@ $(function() {
         rewardTokenPrice: rewardRewarderPrice,
         apr: apr.overrideRewarderApr,
       };
-      LoadHelper.insertVfatInfoNew(
+      LoadHelper.insertVfatInfo(
           App,
           chefAddr,
           poolInfo.poolToken.address,
@@ -316,7 +316,7 @@ $(function() {
       apr: apr.yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         App,
         chefAddr,
         poolInfo.poolToken.address,

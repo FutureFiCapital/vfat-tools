@@ -193,7 +193,7 @@ $(function () {
           poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, rewardPrice, pendingRewarderTokens, rewardRewarderTicker, rewardRewarderPrice);
         _print("");
         
-        LoadHelper.insertVfatInfoNew(
+        LoadHelper.insertVfatInfo(
             App,
             chefAddr,
             poolInfo.poolToken.address,
@@ -296,7 +296,7 @@ $(function () {
         rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
         poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, rewardPrice, chain, depositFee, withdrawFee);
     
-      LoadHelper.insertVfatInfoNew(
+      LoadHelper.insertVfatInfo(
           App,
           chefAddr,
           poolInfo.poolToken.address,

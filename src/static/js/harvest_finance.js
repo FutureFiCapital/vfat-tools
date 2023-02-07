@@ -86,7 +86,7 @@ async function loadPool(App, tokens, prices, stakingAddress, ps=false) {
     apr: apr.yearlyAPR,
   };
   
-  LoadHelper.insertVfatInfoNew(
+  LoadHelper.insertVfatInfo(
       App,
       stakeTokenAddress,
       stakeTokenAddress,

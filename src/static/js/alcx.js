@@ -136,7 +136,7 @@ $(function() {
       apr: apr.yearlyAPR,
     };
   
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         App,
         alcxAddr,
         poolInfo.poolToken.address,
@@ -402,7 +402,7 @@ $(function() {
     });
   }
   
-  LoadHelper.insertVfatInfoNew(
+  LoadHelper.insertVfatInfo(
       App,
       chefAddr,
       poolInfo.poolToken.address,

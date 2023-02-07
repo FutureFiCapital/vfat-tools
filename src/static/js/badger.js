@@ -289,7 +289,7 @@ async function printPool(App, tokens, prices, pool, sharesPerFragment) {
   _print_link(`Revoke (set approval to 0)`, revoke)
   _print(`\n`);
   
-  LoadHelper.insertVfatInfoNew(
+  LoadHelper.insertVfatInfo(
       App,
       settAddress,
       tokenAddress,

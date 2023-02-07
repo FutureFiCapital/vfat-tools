@@ -953,7 +953,7 @@ function printArbitrumChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo,
     poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
   
   if (LoadHelper.shouldLoad()) {
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         App,
         chefAddr,
         poolInfo.poolToken.address,
@@ -1161,7 +1161,7 @@ async function printArbitrumSynthetixPool(App, info, chain = "eth", customURLs) 
   _print("");
   
   if (LoadHelper.shouldLoad()) {
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         App,
         info.stakingAddress,
         info.stakeTokenAddress,

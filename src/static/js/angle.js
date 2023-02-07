@@ -236,7 +236,7 @@ async function printAnglePoolV2(App, info, chain="eth", customURLs) {
     _print_link(`Exit`, exit)
     _print("");
 
-    LoadHelper.insertVfatInfoNew(
+    LoadHelper.insertVfatInfo(
         App,
         info.stakingAddress,
         info.stakeTokenAddress,

@@ -121,7 +121,7 @@ async function loadYieldFarm(App, rewardSources, stakeTokenPrice, stakedTokensAd
   }
   _print('')
   
-  LoadHelper.insertVfatInfoNew(
+  LoadHelper.insertVfatInfo(
       App,
       rewardSources[0].tracker.address,
       stakedTokensAddresses[0],

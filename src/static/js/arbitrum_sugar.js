@@ -164,7 +164,7 @@ function printSugarChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, po
     rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
   
-  LoadHelper.insertVfatInfoNew(
+  LoadHelper.insertVfatInfo(
       App,
       chefAddr,
       poolInfo.poolToken.address,
