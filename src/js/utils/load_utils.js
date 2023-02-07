@@ -22,6 +22,15 @@ export function shouldLoad() {
     return window.loadTracker && !window.loadTracker.mainCompleted;
 }
 
+export async function getTokenFromNetwork(App, tokenAddress, stakingAddress, network) {
+    switch (network) {
+        case window.NETWORKS.ARBITRUM.chainName:
+            return await getArbitrumToken(App, tokenAddress, stakingAddress);
+        case window.NETWORKS.ETHEREUM.chainName:
+            return await getToken(App, tokenAddress, stakingAddress);
+    }
+}
+
 export function insertVfatInfoRaw(
     loadTracker,
     stakingContractAddress,
@@ -174,7 +183,8 @@ export async function insertVfatInfoAsyncNew(
     stakedTokenTvl,
     rewards = [],
 ) {
-    const stakedToken = await getToken(app, stakedTokenAddress, stakingContractAddress);
+    const networkName = pageNetwork().chainName;
+    const stakedToken = await getTokenFromNetwork(app, stakedTokenAddress, stakingContractAddress, networkName);
     const stakedTokenType = window.localStorage.getItem(stakedTokenAddress);
     let currentPath = window.location.pathname;
     currentPath = currentPath.slice(-1) === '/' ? currentPath.slice(0, -1) : currentPath;
@@ -182,7 +192,7 @@ export async function insertVfatInfoAsyncNew(
 
     let completeRewards = [];
     for (const reward of rewards) {
-        let token = await getToken(app, reward.rewardTokenAddress, stakingContractAddress);
+        let token = await getTokenFromNetwork(app, reward.rewardTokenAddress, stakingContractAddress, networkName);
         completeRewards.push({
             rewardTokenAddress: token.address,
             rewardTokenSymbol: token.symbol,
