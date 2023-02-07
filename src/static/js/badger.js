@@ -289,12 +289,10 @@ async function printPool(App, tokens, prices, pool, sharesPerFragment) {
   _print_link(`Revoke (set approval to 0)`, revoke)
   _print(`\n`);
   
-  LoadHelper.insertVfatInfoRaw(
-      window.loadTracker,
+  LoadHelper.insertVfatInfoNew(
+      App,
       settAddress,
       tokenAddress,
-      poolPrices.stakeTokenTicker,
-      pool.name,
       poolPrices.staked_tvl,
       poolPrices.price,
       poolPrices.tvl,
@@ -357,8 +355,6 @@ const getRewards = async (geyser, rewardTokenAddress, prices, poolPrices, totalS
   }
   return {
     rewardTokenAddress: rewardTokenAddress,
-    rewardTokenSymbol: rewardTokenTicker,
-    rewardTokenName: rewardTokenTicker,
     rewardDailyUsd: usdPerWeek / 7,
     rewardTokenPrice: rewardTokenPrice,
     apr: yearlyAPR,

@@ -379,7 +379,7 @@ async function loadDODOChefContract(App, chef, chefAddress, chefAbi, rewardToken
     if (poolPrices[i]) {
       const apr = printChefPool(App, chefAbi, chefAddress, prices, tokens, poolInfos[i], i, poolPrices[i],
         totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
-        pendingRewardsFunction, undefined, undefined, undefined, undefined, undefined, true);
+        pendingRewardsFunction);
       aprs.push(apr);
     }
   }

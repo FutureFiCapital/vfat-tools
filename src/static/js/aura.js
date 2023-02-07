@@ -243,33 +243,25 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
   
   const auraReward = {
       rewardTokenAddress: info.rewardTokenAuraAddress,
-      rewardTokenSymbol: info.rewardTokenAuraTicker,
-      rewardTokenName: info.rewardTokenAuraTicker,
       rewardDailyUsd: info.usdAuraPerWeek / 7,
       rewardTokenPrice: info.rewardTokenAuraPrice,
       apr: yearlyAuraAPR,
   };
   const rewarderReward = {
       rewardTokenAddress: info.rewardTokenAddress,
-      rewardTokenSymbol: info.rewardTokenTicker,
-      rewardTokenName: info.rewardTokenTicker,
       rewardDailyUsd: info.usdPerWeek / 7,
       rewardTokenPrice: info.rewardTokenPrice,
       apr: yearlyAPR,
   };
   
-  var poolToken = await getToken(App, info.stakeTokenAddress, info.stakingAddress);
-  LoadHelper.insertVfatInfoRaw(
-      window.loadTracker,
+  LoadHelper.insertVfatInfoNew(
+      App,
       info.stakingAddress,
       info.stakeTokenAddress,
-      info.stakeTokenTicker,
-      info.stakeTokenTicker,
-      info.staked_tvl,
+      info.poolPrices.staked_tvl,
       info.poolPrices.price,
       info.poolPrices.tvl,
       [auraReward, rewarderReward],
-      // insert here
   );
 
   return {

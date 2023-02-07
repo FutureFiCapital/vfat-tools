@@ -185,8 +185,6 @@ async function printCvxFrxSynthetixPool(App, info, chain="eth", customURLs) {
     _print(`${info.rewardTokenTickers[i]} Per Week: ${info.weeklyRewards[i].toFixed(2)} ($${formatMoney(info.usdCoinsPerWeek[i])}) APR: Year ${yearlyAPR.toFixed(2)}%`);
     rewards.push({
         rewardTokenAddress: info.rewardTokenAddresses[i],
-        rewardTokenSymbol: info.rewardTokenTickers[i],
-        rewardTokenName: info.rewardTokenTickers[i],
         rewardDailyUsd: info.usdCoinsPerWeek[i] / 7,
         rewardPrice: info.usdCoinsPerWeek[i] / info.weeklyRewards[i],
         apr: yearlyAPR,
@@ -233,17 +231,14 @@ async function printCvxFrxSynthetixPool(App, info, chain="eth", customURLs) {
   _print_link(`Exit`, exit)
   _print("");
 
-  LoadHelper.insertVfatInfoRaw(
-      window.loadTracker,
+  LoadHelper.insertVfatInfoNew(
+      App,
       info.stakingAddress,
       info.stakeTokenAddress,
-      info.stakeTokenTicker,
-      info.stakeTokenTicker,
-      info.staked_tvl,
+      info.poolPrices.staked_tvl,
       info.poolPrices.price,
       info.poolPrices.tvl,
       rewards,
-      // pool token will go here
   );
 
   return {

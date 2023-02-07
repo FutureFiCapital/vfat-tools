@@ -156,21 +156,17 @@ async function printEnterdaoPool(App, info, chain="eth", customURLs) {
     
     const reward = {
         rewardTokenAddress: info.rewardTokenAddress,
-        rewardTokenSymbol: info.rewardTokenTicker,
-        rewardTokenName: info.rewardTokenTicker,
         rewardDailyUsd: info.usdPerWeek / 7,
         rewardTokenPrice: info.rewardTokenPrice,
         apr: yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfoRaw(
+    LoadHelper.insertVfatInfoNew(
         window.loadTracker,
         info.stakingAddress,
         info.stakingToken,
-        info.stakeTokenTicker,
-        info.stakeTokenTicker,
-        info.staked_tvl,
-        info.stakeTokenPrice,
+        info.poolPrices.staked_tvl,
+        info.poolPrices.price,
         info.poolPrices.tvl,
         [reward],
     );

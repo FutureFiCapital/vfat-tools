@@ -17,7 +17,7 @@ async function main() {
   _print("Reading smart contracts...\n");
 
   await loadChefContract(App, XSIGMA_CHEF, XSIGMA_CHEF_ADDR, XSIGMA_CHEF_ABI, rewardTokenTicker,
-    "sushi", null, rewardsPerWeek, "pendingSushi", undefined, undefined, undefined, true);
+    "sushi", null, rewardsPerWeek, "pendingSushi");
 
   hideLoading();
   await window.loadTracker.completeLoad();

@@ -17,8 +17,8 @@ consoleInit(main)
     const UNIC_CHEF = new ethers.Contract(UNIC_CHEF_ADDR, UNIC_CHEF_ABI, App.provider);
     const rewardsPerWeek = await UNIC_CHEF.unicPerBlock() / 1e18 * 604800 / 13.5;
 
-    await loadChefContract(App, UNIC_CHEF, UNIC_CHEF_ADDR, UNIC_CHEF_ABI,
-        "UNIC", "unic", null, rewardsPerWeek, "pendingUnic", undefined, undefined, undefined, true);
+    await loadChefContract(App, UNIC_CHEF, UNIC_CHEF_ADDR, UNIC_CHEF_ABI, 
+        "UNIC", "unic", null, rewardsPerWeek, "pendingUnic");
 
     await loadXUnicVaultContract(App, XUNIC_VAULT, XUNIC_VAULT_ADDR, XUNIC_VAULT_ABI,
         "XUNIC", "XUNIC", "pendingxUNICs", UNIC_CHEF);

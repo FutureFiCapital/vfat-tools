@@ -276,21 +276,17 @@ async function printBottoLpPool(App, info, chain="eth", customURLs) {
     
     const reward = {
         rewardTokenAddress: info.rewardTokenAddress,
-        rewardTokenSymbol: info.rewardTokenTicker,
-        rewardTokenName: info.rewardTokenTicker,
         rewardDailyUsd: info.usdPerWeek / 7,
         rewardTokenPrice: info.rewardTokenPrice,
         apr: yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfoRaw(
-        window.loadTracker,
+    LoadHelper.insertVfatInfoNew(
+        App,
         info.stakingAddress,
         info.stakeTokenAddress,
-        info.stakeTokenTicker,
-        info.stakeTokenTicker,
-        info.staked_tvl,
-        info.stakeTokenPrice,
+        info.poolPrices.staked_tvl,
+        info.poolPrices.stakeTokenPrice,
         info.poolPrices.tvl,
         [reward],
     );

@@ -3824,7 +3824,7 @@ function printChefContractLinks(App, chefAbi, chefAddr, poolIndex, poolAddress, 
 
 function printChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolIndex, poolPrices,
                        totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
-                       pendingRewardsFunction, fixedDecimals, claimFunction, chain="eth", depositFee=0, withdrawFee=0, shouldLoad=false) {
+                       pendingRewardsFunction, fixedDecimals, claimFunction, chain="eth", depositFee=0, withdrawFee=0) {
   fixedDecimals = fixedDecimals ?? 2;
   const sp = (poolInfo.stakedToken == null) ? null : getPoolPrices(tokens, prices, poolInfo.stakedToken, chain);
   var poolRewardsPerWeek = poolInfo.allocPoints / totalAllocPoints * rewardsPerWeek;
@@ -3843,22 +3843,18 @@ function printChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolInd
     rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
   
-  if (shouldLoad) {
+  if (LoadHelper.shouldLoad()) {
     const reward = {
       rewardTokenAddress: rewardTokenAddress,
-      rewardTokenSymbol: rewardTokenTicker,
-      rewardTokenName: rewardTokenTicker,
       rewardDailyUsd: poolRewardsPerWeek * rewardPrice / 7,
       rewardTokenPrice: rewardPrice,
       apr: apr.yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfoRaw(
-        window.loadTracker,
+    LoadHelper.insertVfatInfoNew(
+        App,
         chefAddr,
         poolInfo.poolToken.address,
-        poolInfo.poolToken.symbol,
-        poolInfo.poolToken.name,
         poolPrices.staked_tvl,
         poolPrices.price,
         poolPrices.tvl,
@@ -4119,7 +4115,7 @@ async function loadSynthetixPoolInfo(App, tokens, prices, stakingAbi, stakingAdd
     }
 }
 
-async function printSynthetixPool(App, info, chain="eth", customURLs, shouldLoad = false) {
+async function printSynthetixPool(App, info, chain="eth", customURLs) {
     info.poolPrices.print_price(chain, 4, customURLs);
     _print(`${info.rewardTokenTicker} Per Week: ${info.weeklyRewards.toFixed(2)} ($${formatMoney(info.usdPerWeek)})`);
     const weeklyAPR = info.usdPerWeek / info.staked_tvl * 100;
@@ -4276,22 +4272,18 @@ async function printSynthetixPool(App, info, chain="eth", customURLs, shouldLoad
     _print_link(`Exit`, exit)
     _print("");
   
-    if (shouldLoad) {
+    if (LoadHelper.shouldLoad()) {
       const reward = {
         rewardTokenAddress: info.rewardTokenAddress,
-        rewardTokenSymbol: info.rewardTokenTicker,
-        rewardTokenName: info.rewardTokenTicker,
         rewardDailyUsd: info.usdPerWeek / 7,
         rewardTokenPrice: info.rewardTokenPrice,
         apr: yearlyAPR,
       };
 
-      LoadHelper.insertVfatInfoRaw(
-          window.loadTracker,
+      LoadHelper.insertVfatInfoNew(
+          App,
           info.stakingAddress,
           info.stakeTokenAddress,
-          info.stakeTokenTicker,
-          info.stakeTokenTicker,
           info.poolPrices.staked_tvl,
           info.poolPrices.price,
           info.poolPrices.tvl,
@@ -4311,12 +4303,12 @@ async function loadSynthetixPool(App, tokens, prices, abi, address, rewardTokenF
   return await printSynthetixPool(App, info);
 }
 
-async function loadMultipleSynthetixPools(App, tokens, prices, pools, shouldLoad = false) {
+async function loadMultipleSynthetixPools(App, tokens, prices, pools) {
   let totalStaked  = 0, totalUserStaked = 0, individualAPRs = [];
   const infos = await Promise.all(pools.map(p =>
     loadSynthetixPoolInfo(App, tokens, prices, p.abi, p.address, p.rewardTokenFunction, p.stakeTokenFunction)));
   for (const i of infos) {
-    let p = await printSynthetixPool(App, i, undefined, undefined, shouldLoad);
+    let p = await printSynthetixPool(App, i);
     totalStaked += p.staked_tvl || 0;
     totalUserStaked += p.userStaked || 0;
     if (p.userStaked > 0) {

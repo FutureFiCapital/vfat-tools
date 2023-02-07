@@ -190,8 +190,6 @@ async function printAnglePoolV2(App, info, chain="eth", customURLs) {
       totalYearlyAPR += yearlyAPR;
         rewards.push({
           rewardTokenAddress: info.rewardTokenAddresses[i],
-          rewardTokenSymbol: info.rewardTokenTickers[i],
-          rewardTokenName: info.rewardTokenTickers[i],
           rewardDailyUsd: info.usdCoinsPerWeek[i] / 7,
           rewardPrice: info.usdCoinsPerWeek[i] / info.weeklyRewards[i],
           apr: yearlyAPR,
@@ -238,17 +236,14 @@ async function printAnglePoolV2(App, info, chain="eth", customURLs) {
     _print_link(`Exit`, exit)
     _print("");
 
-    LoadHelper.insertVfatInfoRaw(
-        window.loadTracker,
+    LoadHelper.insertVfatInfoNew(
+        App,
         info.stakingAddress,
         info.stakeTokenAddress,
-        info.stakeTokenTicker,
-        info.stakeTokenTicker,
         info.poolPrices.staked_tvl,
         info.poolPrices.price,
         info.poolPrices.tvl,
         rewards,
-        // info.stakeTokenAddress, // Staking token is also pool contract
     );
 
     return {

@@ -112,8 +112,8 @@ $(function() {
   for (let i = 0; i < poolCount; i++) {
     if (poolPrices[i]) {
       const apr = printChefPool(App, chefAbi, chefAddress, prices, tokens, poolInfos[i], i, poolPrices[i],
-        totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
-        pendingRewardsFunction, undefined, undefined, undefined, undefined, undefined, true)
+        totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress, 
+        pendingRewardsFunction);
       aprs.push(apr);
     }
   }

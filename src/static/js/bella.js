@@ -63,7 +63,7 @@ async function main() {
     if (poolPrices[i] && poolPrices[i].price) {
       printChefPool(App, chefAbi, chefAddress, prices, tokens, poolInfos[i], i, poolPrices[i],
         totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
-        pendingRewardsFunction, undefined, undefined, undefined, undefined, undefined, true);
+        pendingRewardsFunction);
     }
   }
 }

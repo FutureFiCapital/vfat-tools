@@ -197,25 +197,23 @@ $(function() {
   
       const sushiReward = {
         rewardTokenAddress: rewardTokenAddress,
-        rewardTokenSymbol: rewardTokenTicker,
-        rewardTokenName: rewardTokenTicker,
         rewardDailyUsd: rewardsPerWeek * rewardPrice / 7,
         rewardTokenPrice: rewardPrice,
         apr: apr.overrideSushiApr,
       };
       const rewarderReward = {
         rewardTokenAddress: poolInfo.rewarderToken.address,
-        rewardTokenSymbol: poolInfo.rewarderToken.symbol,
-        rewardTokenName: poolInfo.rewarderToken.name,
         rewardDailyUsd: rewarderRewardsPerWeek * rewardRewarderPrice / 7,
         rewardTokenPrice: rewardRewarderPrice,
         apr: apr.overrideRewarderApr,
       };
-      LoadHelper.insertVfatInfo(
-          window.loadTracker,
+      LoadHelper.insertVfatInfoNew(
+          App,
           chefAddr,
-          poolInfo,
-          poolPrices,
+          poolInfo.poolToken.address,
+          poolPrices.staked_tvl,
+          poolPrices.price,
+          poolPrices.tvl,
           [sushiReward, rewarderReward],
       );
 
@@ -313,18 +311,18 @@ $(function() {
     
     const sushiReward = {
       rewardTokenAddress: rewardTokenAddress,
-      rewardTokenSymbol: rewardTokenTicker,
-      rewardTokenName: rewardTokenName,
       rewardDailyUsd: rewardsPerWeek * rewardPrice / 7,
       rewardTokenPrice: rewardPrice,
       apr: apr.yearlyAPR,
     };
     
-    LoadHelper.insertVfatInfo(
-        window.loadTracker,
+    LoadHelper.insertVfatInfoNew(
+        App,
         chefAddr,
-        poolInfo,
-        poolPrices,
+        poolInfo.poolToken.address,
+        poolPrices.staked_tvl,
+        poolPrices.price,
+        poolPrices.tvl,
         [sushiReward],
     );
     

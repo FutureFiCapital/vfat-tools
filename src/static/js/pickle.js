@@ -47,7 +47,7 @@ consoleInit(main)
       }; }
     )
 
-    let p0 = await loadMultipleSynthetixPools(App, tokens, prices, Pools, true)
+    let p0 = await loadMultipleSynthetixPools(App, tokens, prices, Pools);
 
     _print_bold(`Total staked: $${formatMoney(p0.staked_tvl)}`)
     if (p0.totalUserStaked > 0) {

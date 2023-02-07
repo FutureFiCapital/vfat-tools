@@ -86,14 +86,12 @@ async function loadPool(App, tokens, prices, stakingAddress, ps=false) {
     apr: apr.yearlyAPR,
   };
   
-  LoadHelper.insertVfatInfoRaw(
-      window.loadTracker,
+  LoadHelper.insertVfatInfoNew(
+      App,
       stakeTokenAddress,
       stakeTokenAddress,
-      stakingTokenTicker,
-      stakingTokenTicker,
-      staked_tvl,
-      stakeTokenPrice,
+      poolPrices.staked_tvl,
+      poolPrices.price,
       poolPrices.tvl,
       [reward],
   );

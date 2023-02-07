@@ -131,18 +131,18 @@ $(function() {
   
     const reward = {
       rewardTokenAddress: rewardTokenAddress,
-      rewardTokenSymbol: rewardTokenTicker,
-      rewardTokenName: rewardTokenTicker,
       rewardDailyUsd: poolInfo.rewardsPerWeek * rewardPrice / 7,
       rewardTokenPrice: rewardPrice,
       apr: apr.yearlyAPR,
     };
   
-    LoadHelper.insertVfatInfo(
-        window.loadTracker,
+    LoadHelper.insertVfatInfoNew(
+        App,
         alcxAddr,
-        poolInfo,
-        poolPrices,
+        poolInfo.poolToken.address,
+        poolPrices.staked_tvl,
+        poolPrices.price,
+        poolPrices.tvl,
         [reward],
     );
     
@@ -396,20 +396,20 @@ $(function() {
   for (let i = 0; i < rewardTokenAddresses.length; i++) {
     rewards.push({
       rewardTokenAddress: rewardTokenAddresses[i],
-      rewardTokenSymbol: rewardTokenTickers[i],
-      rewardTokenName: rewardTokenTickers[i],
       rewardDailyUsd: rewardsPerWeek[i] * rewardPrices[i] / 7,
       rewardTokenPrice: rewardPrices[i],
-      apr: rewardsPerWeek[i] * rewardPrices[i] * 100 * 52 / staked_tvl,}
-    );
+      apr: rewardsPerWeek[i] * rewardPrices[i] * 100 * 52 / staked_tvl,
+    });
   }
-
-  LoadHelper.insertVfatInfo(
-      window.loadTracker,
+  
+  LoadHelper.insertVfatInfoNew(
+      App,
       chefAddr,
-      poolInfo,
-      poolPrices,
-      rewards,
+      poolInfo.poolToken.address,
+      staked_tvl,
+      poolPrices.price,
+      poolPrices.tvl,
+      [rewards],
   );
   
   return apr;
