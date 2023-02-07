@@ -22,7 +22,6 @@ $(function() {
     //   await loadDopexSynthetixPools(App, tokens, prices, STAKINGREWARDS_ABI, pool);
     // });
     await Promise.all(pools.map(pool => loadDopexSynthetixPools(App, tokens, prices, STAKINGREWARDS_ABI, pool)));
-  p
   
     hideLoading();
     await window.loadTracker.completeLoad();
