@@ -27,6 +27,7 @@ const Pools =  [
                       stakeTokenFunction : "stakeToken", rewardTokenFunction : "rewardToken" }})
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}`);
@@ -42,4 +43,5 @@ async function main() {
     _print_bold(`Total staked: $${formatMoney(p.staked_tvl + p1.staked_tvl)}`)
 
     hideLoading();
+    await window.loadTracker.completeLoad();
 }

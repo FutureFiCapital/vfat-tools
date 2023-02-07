@@ -35,6 +35,7 @@ const EthPool =
     }
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}`);
@@ -57,6 +58,7 @@ async function main() {
     _print_bold(`Total staked: $${formatMoney(p0.staked_tvl + p.staked_tvl + p2.staked_tvl)}`) 
 
     hideLoading();
+    await window.loadTracker.completeLoad();
 }
 
 async function loadSynthetixEthPool(App, tokens, prices, abi, address) {

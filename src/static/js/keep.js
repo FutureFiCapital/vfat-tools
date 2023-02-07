@@ -19,7 +19,7 @@ const Pools = [
 )
 
 async function main() {
-
+  window.loadTracker = LoadHelper.initLoadTracker();
   const App = await init_ethers();
 
   const KEEP_TOKEN_ADDR = '0x85eee30c52b0b379b046fb0f85f4f3dc3009afec';
@@ -41,6 +41,7 @@ async function main() {
   await loadKeepVault(App, tokens, prices, STAKING_POOL, KEEP_TOKEN_ADDR, KEEP_STAKING_ADDR, KEEP_STAKING_ABI);
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }
 
 async function loadKeepVault(App, tokens, prices, STAKING_POOL, KEEP_TOKEN_ADDR, KEEP_STAKING_ADDR, KEEP_STAKING_ABI){

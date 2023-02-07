@@ -3,6 +3,7 @@ consoleInit(main)
   });
 
 async function main() {
+  window.loadTracker = LoadHelper.initLoadTracker();
   const App = await init_ethers();
   const tokens = {}
 
@@ -33,8 +34,26 @@ async function main() {
   const USF_PER_BLOCK = 2.2
   const rewardsPerWeek = USF_PER_BLOCK * SecondsPerDay * 7 / 13.5;
 
-  printAPR("USF", usfPrice, rewardsPerWeek, "USF-ETH LP", poolPrices.tvl, lpToken.unstaked,
+  const apr = printAPR("USF", usfPrice, rewardsPerWeek, "USF-ETH LP", poolPrices.tvl, lpToken.unstaked,
     poolPrices.price, 2);
+  
+  const reward = {
+    rewardTokenAddress: USF_ADDRESS,
+    rewardDailyUsd: rewardsPerWeek * usfPrice / 7,
+    rewardTokenPrice: usfPrice,
+    apr: apr.yearlyAPR,
+  };
+  
+  LoadHelper.insertVfatInfo(
+      App,
+      "0x0000000000000000000000000000000000000000",
+      USF_POOL_ADDRESS,
+      poolPrices.staked_tvl,
+      poolPrices.price,
+      poolPrices.tvl,
+      [reward],
+  );
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }

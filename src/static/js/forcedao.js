@@ -12,7 +12,7 @@ const Pool = {
 }
 
 async function main() {
-
+  window.loadTracker = LoadHelper.initLoadTracker();
   const App = await init_ethers();
 
   _print(`Initialized ${App.YOUR_ADDRESS}`);
@@ -30,6 +30,7 @@ async function main() {
   }
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }
 
 async function loadForceSynthetixPool(App, tokens, prices, abi, address, rewardTokenFunction, stakeTokenFunction) {
@@ -160,7 +161,24 @@ async function printSynthetixPool(App, info, chain="eth", customURLs) {
     }
     _print_link(`Exit`, exit)
     _print("");
-
+    
+    const reward = {
+        rewardTokenAddress: info.rewardTokenAddress,
+        rewardDailyUsd: info.usdPerWeek / 7,
+        rewardTokenPrice: info.rewardTokenPrice,
+        apr: yearlyAPR,
+    };
+    
+    LoadHelper.insertVfatInfo(
+        App,
+        info.stakingAddress,
+        info.stakeTokenAddress,
+        info.poolPrices.staked_tvl,
+        info.poolPrices.price,
+        info.poolPrices.tvl,
+        [reward],
+    );
+    
     return {
         staked_tvl: info.poolPrices.staked_tvl,
         userStaked : userStakedUsd,

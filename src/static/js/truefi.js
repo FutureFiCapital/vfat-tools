@@ -147,10 +147,27 @@ consoleInit(main)
     _print_link(`Claim ${earned.toFixed(6)} ${rewardTokenTicker}`, claim)
     _print_link(`Exit`, exit)
     _print(`\n`);
+  
+    const reward = {
+      rewardTokenAddress: rewardTokenAddress,
+      rewardDailyUsd: usdPerWeek / 7,
+      rewardTokenPrice: rewardTokenPrice,
+      apr: yearlyAPR,
+    };
+  
+    LoadHelper.insertVfatInfo(
+        App,
+        stakingAddress,
+        stakeTokenAddress,
+        poolPrices.staked_tvl,
+        poolPrices.price,
+        poolPrices.tvl,
+        [reward],
+    );
   }
 
   async function main() {
-
+    window.loadTracker = LoadHelper.initLoadTracker();
     const CONTRACTS = [
         "0xED45Cf4895C110f464cE857eBE5f270949eC2ff4",
         "0x493945574d9D41c1b553a3E5b71090eFc99Bf929",
@@ -171,4 +188,5 @@ consoleInit(main)
     }
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }

@@ -126,10 +126,28 @@ function printWasabixPool(App, wasabixAbi, wasabixAddr, prices, poolInfo, poolIn
   printWasabixContractLinks(App, wasabixAbi, wasabixAddr, poolIndex, poolInfo.poolToken.address,
     rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, poolInfo.userUnclaimed, rewardPrice);
+  
+  const reward = {
+    rewardTokenAddress: rewardTokenAddress,
+    rewardDailyUsd: poolInfo.rewardsPerWeek * rewardPrice / 7,
+    rewardTokenPrice: rewardPrice,
+    apr: apr.yearlyAPR,
+  };
+  
+  LoadHelper.insertVfatInfo(
+      App,
+      wasabixAddr,
+      poolInfo.poolToken.address,
+      poolPrices.staked_tvl,
+      poolPrices.price,
+      poolPrices.tvl,
+      [reward],
+  );
   return apr;
 }
 
 async function main() {
+  window.loadTracker = LoadHelper.initLoadTracker();
   const App = await init_ethers();
   const tokens = {}
 
@@ -208,4 +226,5 @@ async function main() {
   }
 
   hideLoading();
+  await window.loadTracker.completeLoad();
 }

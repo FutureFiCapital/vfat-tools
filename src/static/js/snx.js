@@ -65,6 +65,7 @@ const Pool3 = [
 })
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}`);
@@ -95,6 +96,7 @@ async function main() {
     }
 
     hideLoading();
+    await window.loadTracker.completeLoad();
 }
 
 async function loadSnxShortPool(App, tokens, prices, abi, address, rewardTokenFunction, stakeTokenAddress) {

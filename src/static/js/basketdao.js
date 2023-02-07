@@ -3,6 +3,7 @@ consoleInit(main)
   });
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -32,6 +33,7 @@ consoleInit(main)
     await loadSynthetixPool(App, tokens, prices, Pool.abi, Pool.address, Pool.rewardTokenFunction, Pool.stakingTokenFunction);
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }
 
   async function loadXBasket(App, tokens, prices){

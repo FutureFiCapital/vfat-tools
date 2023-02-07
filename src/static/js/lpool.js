@@ -4,6 +4,7 @@ consoleInit(main)
   });
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -62,6 +63,7 @@ consoleInit(main)
         "lpt", null, rewardsPerWeek, "pendingLpt");
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }
 
   async function loadLaunchpoolChefContract(App, chef, chefAddress, chefAbi, rewardTokenTicker,

@@ -18,6 +18,7 @@ const Pools = [
 })
 
 async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
     var tokens = {};
     var prices = {};
@@ -28,4 +29,5 @@ async function main() {
     }
     _print("");
     await loadBasisFork(Basis.MITH);
+    await window.loadTracker.completeLoad();
 }

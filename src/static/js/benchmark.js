@@ -3,6 +3,7 @@ consoleInit(main)
   });
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -20,4 +21,5 @@ consoleInit(main)
         "MARK", "markPerBlock", null, "pendingMark");
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }

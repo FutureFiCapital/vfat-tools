@@ -56,9 +56,27 @@ consoleInit(main)
     _print_link(`Unstake ${userStaked.toFixed(2)} ${pp.stakingTokenTicker}`, unstake)
     _print_link(`Claim ${rewardEarned.toFixed(2)} ${rewardTokenTicker}`, claim)
     _print(`\n`);
+  
+    const reward = {
+      rewardTokenAddress: rewardTokenAddress,
+      rewardDailyUsd: usdPerWeek / 7,
+      rewardTokenPrice: rewardPrice,
+      apr: yearlyAPR,
+    };
+  
+    LoadHelper.insertVfatInfo(
+        App,
+        operatorAddr,
+        poolTokenAddress,
+        pp.staked_tvl,
+        pp.price,
+        pp.tvl,
+        [reward],
+    );
   }
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -86,4 +104,5 @@ consoleInit(main)
     }
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }

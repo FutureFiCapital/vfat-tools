@@ -27,6 +27,7 @@ async function loadAMM(App, tokens, ammAddress) {
 }
 
 async function main() {
+  window.loadTracker = LoadHelper.initLoadTracker();
   const newPool = {
     address : "0x7730C96A3eF1084833D5896D36129605D9a5aEAD",
     abi : NEW_POOL_ABI,
@@ -53,4 +54,5 @@ async function main() {
   }
   let p0 = await loadSynthetixPool(App, tokens, prices, newPool.abi, newPool.address, newPool.rewardTokenFunction, newPool.stakeTokenFunction);
   hideLoading();
+  await window.loadTracker.completeLoad();
 }
