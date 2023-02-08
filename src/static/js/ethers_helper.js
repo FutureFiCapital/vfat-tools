@@ -3866,7 +3866,7 @@ function printChefPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolInd
 
 async function loadChefContract(App, chef, chefAddress, chefAbi, rewardTokenTicker,
     rewardTokenFunction, rewardsPerBlockFunction, rewardsPerWeekFixed, pendingRewardsFunction,
-    extraPrices, deathPoolIndices, showAll, shouldLoad=false) {
+    extraPrices, deathPoolIndices, showAll) {
   const chefContract = chef ?? new ethers.Contract(chefAddress, chefAbi, App.provider);
 
   const poolCount = parseInt(await chefContract.poolLength(), 10);
@@ -3925,7 +3925,7 @@ async function loadChefContract(App, chef, chefAddress, chefAbi, rewardTokenTick
     if (poolPrices[i]) {
       const apr = printChefPool(App, chefAbi, chefAddress, prices, tokens, poolInfos[i], i, poolPrices[i],
         totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
-        pendingRewardsFunction, undefined, undefined, undefined, undefined, undefined, shouldLoad);
+        pendingRewardsFunction);
       aprs.push(apr);
     }
   }
