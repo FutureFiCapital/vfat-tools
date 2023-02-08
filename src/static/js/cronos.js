@@ -48,7 +48,8 @@ const main = async() => {
       ["Dark Crystal         ","", `<a href='darkcrystl'   >Various</a>`,"MINE         ","https://cronos.darkcrystl.com"],
       ["Procyon Finance      ","", `<a href='procyon'      >Various</a>`,"PCY          ","https://procyon.finance"],
       ["Cronos Steakhouse    ","", `<a href='steakhouse'   >Various</a>`,"             ","https://www.cronossteakhouse.com"],
-      ["Evolve Finance       ","", `<a href='evolve'       >Various</a>`,"EVL          ","https://www.evl.finance"]
+      ["Evolve Finance       ","", `<a href='evolve'       >Various</a>`,"EVL          ","https://www.evl.finance"],
+      ["Casino Cronos        ","", `<a href='casinocronos' >Various</a>`,"CASINO       ","https://casinocronos.com"]
     ]
   }
 
