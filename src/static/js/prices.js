@@ -25,7 +25,16 @@ const ArbitrumTokens = [
   { "id": "stargate-finance", "symbol": "STG", "contract": "0x6694340fc020c5E6B96567843da2df01b2CE1eb6"},
   { "id": "jones-dao", "symbol": "JONES", "contract": "0x10393c20975cF177a3513071bC110f7962CD67da" },
   { "id": "impermax", "symbol": "IMX", "contract": "0x9c67ee39e3c4954396b9142010653f17257dd39c" },
-  { "id": "hop-protocol", "symbol": "HOP", "contract": "0xc5102fe9359fd9a28f877a67e36b0f050d81a3cc" }
+  { "id": "hop-protocol", "symbol": "HOP", "contract": "0xc5102fe9359fd9a28f877a67e36b0f050d81a3cc" },
+  { "id": "solidlizard", "symbol": "SLIZ", "contract": "0x463913D3a3D3D291667D53B8325c598Eb88D3B0e" },
+  { "id": "gmx", "symbol": "GMX", "contract": "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a" },
+  { "id": "vela-token", "symbol": "VELA", "contract": "0x088cd8f5ef3652623c22d48b1605dcfe860cd704" },
+  { "id": "stabilize", "symbol": "STBZ", "contract": "0x2C110867CA90e43D372C1C2E92990B00EA32818b" },
+  { "id": "gmd-protocol", "symbol": "GMD", "contract": "0x4945970efeec98d393b4b979b9be265a3ae28a8b" },
+  { "id": "zyberswap", "symbol": "ZYB", "contract": "0x3b475f6f2f41853706afc9fa6a6b8c5df1a2724c" },
+  { "id": "swapfish", "symbol": "FISH", "contract": "0xb348b87b23d5977e2948e6f36ca07e1ec94d7328" },
+  { "id": "staked-ether", "symbol": "STETH", "contract": "0x5979D7b546E38E414F7E9822514be443A4800529" },
+  { "id": "sterling-finance", "symbol": "STR", "contract": "0x5DB7b150c5F38c5F5db11dCBDB885028fcC51D68" }
 ];
 
 const AstarTokens = [
@@ -244,7 +253,8 @@ const bscTokens = [
   { "id": "anonverse", "symbol": "ANON", "contract": "0x9a980a084d8d72b219e1c79d91faf06bec874d51" },
   { "id": "beglobaldao", "symbol": "GLBD", "contract": "0xd177e36377e71775d6f9956b3fdd0f02664c6996" },
   { "id": "pigs-2", "symbol": "PIGS", "contract": "0x9a3321e1acd3b9f6debee5e042dd2411a1742002" },
-  { "id": "beglobaldao", "symbol": "GLBD", "contract": "0xd177e36377e71775d6f9956b3fdd0f02664c6996" }
+  { "id": "beglobaldao", "symbol": "GLBD", "contract": "0xd177e36377e71775d6f9956b3fdd0f02664c6996" },
+  { "id": "level-governance", "symbol": "LGO", "contract": "0xBe2B6C5E31F292009f495DDBda88e28391C9815E" }
 ]
 
 const cantoTokens = [
@@ -255,6 +265,7 @@ const cantoTokens = [
   { "id": "canto-inu","symbol": "CINU","contract": "0x7264610A66EcA758A8ce95CF11Ff5741E1fd0455" },
   { "id": "usd-coin","symbol": "USDC","contract": "0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd" },
   { "id": "tether","symbol": "USDT","contract": "0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75" },
+  { "id": "velocimeter-flow","symbol": "FLOW","contract": "0xB5b060055F0d1eF5174329913ef861bC3aDdF029" },
 ]
 
 const celoTokens = [
@@ -349,6 +360,7 @@ const FantomTokens = [
     { "id": "galaxy-triton", "symbol": "TRITON", "contract": "0x9cf4009e62429Db3F57Aa9e7e8E898427cF6865f" },
     { "id": "galaxy-oberon", "symbol": "OBERON", "contract": "0xc979E70611D997Aa109528c6A9aa73D82Eaa2881" },
     { "id": "pumpkins", "symbol": "KINS", "contract": "0x6eced8e16eda61e65292f019b165542a5906ecd6" },
+    { "id": "skullswap-exchange", "symbol": "SKULL", "contract": "0xfa5992a8a47af7029e04ec6a95203ad3f301460b" },
   ],
   [
     { "id": "wraithswap", "symbol": "WRA", "contract": "0x4CF098d3775Bd78a4508a13E126798Da5911b6cd" },
@@ -399,7 +411,7 @@ const FantomTokens = [
     { "id": "stargate-finance", "symbol": "STG", "contract": "0x2F6F07CDcf3588944Bf4C42aC74ff24bF56e7590"},
     { "id": "deus-finance-2", "symbol": "DEUS", "contract": "0xde5ed76e7c05ec5e4572cfc88d1acea165109e44"},
     { "id": "strategyx", "symbol": "STAY", "contract": "0xA5365f2E77bCe1cb2D42F5c808012C01b1548d3C" },
-    { "id": "fang-token", "symbol": "FANG", "contract": "0x49894fcc07233957c35462cfc3418ef0cc26129f" }
+    { "id": "fang-token", "symbol": "FANG", "contract": "0x49894fcc07233957c35462cfc3418ef0cc26129f" },
   ]
 ];
 
@@ -526,7 +538,8 @@ const KavaTokens = [
   { "id": "kava", "symbol": "KAVA", "contract": "0xc86c7C0eFbd6A49B35E8714C5f59D99De09A225b"},
   { "id": "usd-coin","symbol": "USDC", "contract": "0xfA9343C3897324496A05fC75abeD6bAC29f8A40f" },
   { "id": "tether","symbol": "USDT", "contract": "0xB44a9B6905aF7c801311e8F4E76932ee959c663C" },
-  { "id": "dai","symbol": "DAI", "contract": "0x765277EebeCA2e31912C9946eAe1021199B39C61" }
+  { "id": "dai","symbol": "DAI", "contract": "0x765277EebeCA2e31912C9946eAe1021199B39C61" },
+  { "id": "equilibre","symbol": "VARA", "contract": "0xe1da44c0da55b075ae8e2e4b6986adc76ac77d73" }
 ];
 
 const KccTokens = [
@@ -615,7 +628,8 @@ const maticTokens = [
   { "id": "klima-dao", "symbol": "KLIMA","contract": "0x4e78011ce80ee02d2c3e649fb657e45898257815" },
   { "id": "toucan-protocol-base-carbon-tonne", "symbol": "BCT","contract": "0x2f800db0fdb5223b3c3f354886d907a671414a7f" },
   { "id": "frax", "symbol": "FRAX","contract": "0x45c32fA6DF82ead1e2EF74d17b76547EDdFaFF89" },
-  { "id": "hop-protocol", "symbol": "HOP","contract": "0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC" }
+  { "id": "hop-protocol", "symbol": "HOP","contract": "0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC" },
+  { "id": "dfx-finance", "symbol": "DFX","contract": "0xE7804D91dfCDE7F776c90043E03eAa6Df87E6395" }
 ]
 
 const MeterTokens = [

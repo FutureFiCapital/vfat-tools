@@ -2274,6 +2274,7 @@ function getUniPrices(tokens, prices, pool, chain="eth")
   else if (pool.symbol.includes("LSLP")) stakeTokenTicker += " LSLP";
   else if (pool.symbol.includes("vAMM")) stakeTokenTicker += " vAMM";
   else if (pool.symbol.includes("HELIX-LP")) stakeTokenTicker += " HELIX-LP";
+  else if (pool.symbol.includes("Arbi-LP")) stakeTokenTicker += " Arbi-LP";
   else if (pool.symbol.includes("FISH")) stakeTokenTicker += " FISH LP";
   else if (pool.symbol.includes("MDEX")) stakeTokenTicker += " MDEX LP";
   else if (pool.symbol.includes("JEWEL-LP")) stakeTokenTicker += " Jewel LP Token";
@@ -2396,6 +2397,7 @@ function getUniPrices(tokens, prices, pool, chain="eth")
           pool.symbol.includes("FX-V2") ?  `https://app.fx-swap.io/pair/${pool.address}` :
           pool.symbol.includes("PUD-LP") ?  `https://info.puddingswap.finance/pair/${pool.address}` :
           pool.symbol.includes("HELIX-LP") ?  `https://helix.finance/data/trading-pool/${pool.address}` :
+          pool.symbol.includes("Arbi-LP") ?  `https://arbiswap.io/swap/` :
           pool.symbol.includes("LSLP") ? `https://info.linkswap.app/pair/${pool.address}` :
           pool.name.includes("Zyber LP") ? `https://analytics.zyberswap.io/pairs/${pool.address}` :
           pool.symbol.includes("MDEX") ? `https://info.mdex.com/#/pools/${pool.address}` :
@@ -2431,8 +2433,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
                   "fantom": `https://solidly.exchange`,
                   "metis": `https://hermes.maiadao.io/#/swap`,
                   "optimism": `https://app.velodrome.finance/swap`,
-                  "canto": `https://forteswap.xyz/`,
+                  "canto": `https://canto.velocimeter.xyz/`,
                   "eth": `https://solidly.com/`,
+                  "arbitrum": `https://solidlizard.finance/`,
+                  "bsc": `https://info.thena.fi/pair/${pool.address}`,
+                  "kava": `https://equilibrefinance.com/`
                 }
               [chain]):
               pool.symbol.includes("sAMM") ?  (
@@ -2440,8 +2445,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
                   "fantom" : `https://solidly.exchange`,
                   "metis" : `https://hermes.maiadao.io/#/swap`,
                   "optimism" : `https://app.velodrome.finance/swap`,
-                  "canto": `https://forteswap.xyz/`,
+                  "canto": `https://canto.velocimeter.xyz/`,
                   "eth": `https://solidly.com/`,
+                  "arbitrum": `https://solidlizard.finance/`,
+                  "bsc": `https://info.thena.fi/pair/${pool.address}`,
+                  "kava": `https://equilibrefinance.com/`
                 }
               [chain]):
               pool.symbol.includes("JEWEL-LP") ?  (
@@ -2575,6 +2583,11 @@ function getUniPrices(tokens, prices, pool, chain="eth")
             `https://helix.finance/remove/${t0address}/${t1address}`,
             `https://helix.finance/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
           ] :
+          pool.symbol.includes("Arbi-LP") ? [
+            `https://arbiswap.io/add/${t0address}/${t1address}`,
+            `https://arbiswap.io/remove/${t0address}/${t1address}`,
+            `https://arbiswap.io/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
+          ] :
           pool.symbol.includes("JLP") ? [
             `https://traderjoexyz.com/pool/${t0address}/${t1address}`,
             `https://traderjoexyz.com/pool/${t0address}/${t1address}`,
@@ -2634,14 +2647,29 @@ function getUniPrices(tokens, prices, pool, chain="eth")
               `https://whaleswap.finance/swap`
             ],
             "canto" : [
-              `https://forteswap.xyz/pool/add-liquidity/`,
-              `https://forteswap.xyz/pool/remove-liquidity/`,
-              `https://forteswap.xyz/`
+              `https://canto.velocimeter.xyz/liquidity/${pool.address}`,
+              `https://canto.velocimeter.xyz/liquidity/${pool.address}`,
+              `https://canto.velocimeter.xyz`
             ],
             "eth" : [
               `https://solidly.com/liquidity/`,
               `https://solidly.com/liquidity/`,
               `https://solidly.com/swap`
+            ],
+            "arbitrum" : [
+              `https://solidlizard.finance/liquidity`,
+              `https://solidlizard.finance/liquidity`,
+              `https://solidlizard.finance/swap`
+            ],
+            "bsc" : [
+              `https://thena.fi/liquidity/manage`,
+              `https://thena.fi/liquidity/manage`,
+              `https://thena.fi/swap`
+            ],
+            "kava" : [
+              `https://equilibrefinance.com/liquidity/${pool.address}`,
+              `https://equilibrefinance.com/liquidity/${pool.address}`,
+              `https://equilibrefinance.com/swap`
             ]
           } [chain]):
           pool.symbol.includes("sAMM") ? ({
@@ -2666,14 +2694,29 @@ function getUniPrices(tokens, prices, pool, chain="eth")
               `https://whaleswap.finance/swap`
             ],
             "canto" : [
-              `https://forteswap.xyz/pool/add-liquidity/`,
-              `https://forteswap.xyz/pool/remove-liquidity/`,
-              `https://forteswap.xyz/`
+              `https://canto.velocimeter.xyz/liquidity/${pool.address}`,
+              `https://canto.velocimeter.xyz/liquidity/${pool.address}`,
+              `https://canto.velocimeter.xyz/`
             ],
             "eth" : [
               `https://solidly.com/liquidity/`,
               `https://solidly.com/liquidity/`,
               `https://solidly.com/swap`
+            ],
+            "arbitrum" : [
+              `https://solidlizard.finance/liquidity`,
+              `https://solidlizard.finance/liquidity`,
+              `https://solidlizard.finance/swap`
+            ],
+            "bsc" : [
+              `https://thena.fi/liquidity/manage`,
+              `https://thena.fi/liquidity/manage`,
+              `https://thena.fi/swap`
+            ],
+            "kava" : [
+              `https://equilibrefinance.com/liquidity/${pool.address}`,
+              `https://equilibrefinance.com/liquidity/${pool.address}`,
+              `https://equilibrefinance.com/swap`
             ]
           } [chain]):
           pool.symbol.includes("HBLP") ? [
@@ -3740,6 +3783,37 @@ function getYearnPrices(prices, pool, chain){
   }
 }
 
+function getTranchePrices(prices, pool, chain){
+  let price = 0, tvl = 0;
+  for(let i = 0; i < pool.assets.length; i++){
+      const assetPrice = getParameterCaseInsensitive(prices, pool.assets[i])?.usd;
+      //price += assetPrice;
+      const assetTVL = pool.trancheAssetsData[i].poolAmount / 10 ** pool.assetTokens[i].decimals * assetPrice;
+      tvl += assetTVL;
+    }
+  price = tvl / pool.totalSupply;
+  const staked_tvl = pool.staked * price;
+  const poolUrl = getChainExplorerUrl(chain, pool.address);
+  let printAssetSymbols = ``;
+  for(const assetToken of pool.assetTokens){
+    printAssetSymbols += `${assetToken.symbol} `
+  }
+  const name = `<a href='${poolUrl}' target='_blank'>${pool.symbol} - [${printAssetSymbols}]</a> Market Cap: $${formatMoney(tvl)}`;
+  return {
+    staked_tvl : staked_tvl,
+    price,
+    stakeTokenTicker : pool.symbol,
+    print_price() {
+      _print(`${name} Price: $${price.toFixed(2)}`);
+      _print(`Staked: ${pool.staked.toFixed(4)} ${pool.symbol} ($${formatMoney(staked_tvl)})`);
+    },
+    print_contained_price() {
+    },
+    staked_tvl,
+    tvl
+  }
+}
+
 function getPoolPrices(tokens, prices, pool, chain = "eth") {
   if (pool.w0 != null) return getValuePrices(tokens, prices, pool);
   if (pool.buniPoolTokens != null) return getBunicornPrices(tokens, prices, pool);
@@ -3748,6 +3822,7 @@ function getPoolPrices(tokens, prices, pool, chain = "eth") {
   if (pool.token0 != null) return getUniPrices(tokens, prices, pool, chain);
   if (pool.xcp_profit != null) return getTriCryptoPrices(prices, pool, chain);
   if (pool.yearn) return getYearnPrices(prices, pool, chain);
+  if (pool.trancheAssetsData) return getTranchePrices(prices, pool, chain);
   if (pool.virtualPrice != null) return getCurvePrices(prices, pool, chain); //should work for saddle too
   if (pool.token != null) return getWrapPrices(tokens, prices, pool, chain);
   return getErc20Prices(prices, pool, chain);
