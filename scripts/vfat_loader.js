@@ -83,12 +83,14 @@ const ETH_PROTOCOLS = [
 ];
 const ARB_PROTOCOLS = [
     'arballz',
+    'arbidex',
     'arbidolphin',
     'arbifarm',
     'arbikiwi',
     'arbiz',
     'dodo',
     'dopex',
+    'excalibur',
     'frost',
     'gmx',
     'honeypot',
@@ -97,6 +99,7 @@ const ARB_PROTOCOLS = [
     'jones',
     'l2swap',
     'marvin',
+    'mindgames',
     'nyan',
     'onyx',
     'oreo',
@@ -104,6 +107,7 @@ const ARB_PROTOCOLS = [
     'plutusdao',
     'polarbi',
     'radiant',
+    'sharky',
     'stargate',
     'sugar',
     'sushi',
@@ -113,6 +117,7 @@ const ARB_PROTOCOLS = [
     'waterfall',
     'whalesfinance',
     'wtfdex',
+    'xblue',
 ];
 
 const NETWORK_MAP = {
