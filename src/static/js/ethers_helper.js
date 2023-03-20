@@ -2268,17 +2268,20 @@ function getUniPrices(tokens, prices, pool, chain="eth")
   else if (pool.symbol.includes("VERSE-X")) stakeTokenTicker += " VERSE-X";
   else if (pool.symbol.includes("Oreo-LP")) stakeTokenTicker += " OREO-SWAP LP";
   else if (pool.symbol.includes("Sugar-LP")) stakeTokenTicker += " SUGAR-SWAP LP";
+  else if (pool.symbol.includes("CMLT-LP")) stakeTokenTicker += " Camelot LP";
   else if (pool.symbol.includes("YLP")) stakeTokenTicker += " Yodedex LP";
   else if (pool.symbol.includes("DST-V2")) stakeTokenTicker += " DogeSwap LP";
   else if (pool.symbol.includes("FX-V2")) stakeTokenTicker += " FX Swap LP";
   else if (pool.symbol.includes("LSLP")) stakeTokenTicker += " LSLP";
   else if (pool.symbol.includes("vAMM")) stakeTokenTicker += " vAMM";
+  else if (pool.symbol.includes("vrAMM")) stakeTokenTicker += " vrAMM";
   else if (pool.symbol.includes("HELIX-LP")) stakeTokenTicker += " HELIX-LP";
   else if (pool.symbol.includes("Arbi-LP")) stakeTokenTicker += " Arbi-LP";
   else if (pool.symbol.includes("FISH")) stakeTokenTicker += " FISH LP";
   else if (pool.symbol.includes("MDEX")) stakeTokenTicker += " MDEX LP";
   else if (pool.symbol.includes("JEWEL-LP")) stakeTokenTicker += " Jewel LP Token";
   else if (pool.symbol.includes("sAMM")) stakeTokenTicker += " sAMM";
+  else if (pool.symbol.includes("crAMM")) stakeTokenTicker += " crAMM";
   else if (pool.symbol.includes("Wigo-LP")) stakeTokenTicker += " Wigo-LP";
   else if (pool.symbol.includes("PUD-LP")) stakeTokenTicker += " PUD-LP";
   else if (pool.symbol.includes("DXS")) stakeTokenTicker += " DXS-LP";
@@ -2403,6 +2406,7 @@ function getUniPrices(tokens, prices, pool, chain="eth")
           pool.symbol.includes("MDEX") ? `https://info.mdex.com/#/pools/${pool.address}` :
           pool.symbol.includes("Milky-LP") ? `https://milkyway.exchange/` :
           pool.symbol.includes("YLP") ? `https://dexscreener.com/dogechain/yodeswap` :
+          pool.symbol.includes("CMLT-LP") ? `https://info.camelot.exchange/pair/${pool.address}` :
           pool.symbol.includes("MSLP") ? `https://www.milkyswap.exchange/` :
             pool.symbol.includes("SLP") ? (
               {
@@ -2428,6 +2432,8 @@ function getUniPrices(tokens, prices, pool, chain="eth")
               [chain]):
               pool.symbol.includes("CS-LP") ?  `https://app.coinswap.space/#/` :
               pool.symbol.includes("NMX-LP") ?  `https://nomiswap.io/swap` :
+              pool.symbol.includes("crAMM") ?  `https://app.ramses.exchange/swap` :
+              pool.symbol.includes("vrAMM") ?  `https://app.ramses.exchange/swap` :
               pool.symbol.includes("vAMM") ?  (
                 {
                   "fantom": `https://solidly.exchange`,
@@ -2597,6 +2603,21 @@ function getUniPrices(tokens, prices, pool, chain="eth")
             `https://yodeswap.dog/exchange/add/${t0address}/${t1address}`,
             `https://yodeswap.dog/exchange/remove/${t0address}/${t1address}`,
             `https://yodeswap.dog/exchange/swap?inputCurrency=${t0address}&outputCurrency=${t1address}`
+          ] :
+          pool.symbol.includes("CMLT-LP") ? [
+            `https://app.camelot.exchange/liquidity`,
+            `https://app.camelot.exchange/liquidity`,
+            `https://app.camelot.exchange/`
+          ] :
+          pool.symbol.includes("vrAMM") ? [
+            `https://app.ramses.exchange/liquidity/create`,
+            `https://app.ramses.exchange/liquidity/create`,
+            `https://app.ramses.exchange/swap`
+          ] :
+          pool.symbol.includes("crAMM") ? [
+            `https://app.ramses.exchange/liquidity/create`,
+            `https://app.ramses.exchange/liquidity/create`,
+            `https://app.ramses.exchange/swap`
           ] :
           pool.symbol.includes("Milky-LP") ? [
             `https://milkyway.exchange/swap`,
