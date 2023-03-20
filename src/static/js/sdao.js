@@ -3,6 +3,7 @@ consoleInit(main)
   });
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -16,6 +17,7 @@ consoleInit(main)
         "SDAO", "rewardsToken", "pendingRewards", null, [1]);
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }
 
 async function loadSdaoContract(App, chef, chefAddress, chefAbi, rewardTokenTicker,
@@ -159,5 +161,23 @@ function printSdaoPool(App, chefAbi, chefAddr, prices, tokens, poolInfo, poolInd
   printChefContractLinks(App, chefAbi, chefAddr, poolIndex, poolInfo.address, pendingRewardsFunction,
     rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
     poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
+  
+  const reward = {
+    rewardTokenAddress: rewardTokenAddress,
+    rewardDailyUsd: poolRewardsPerWeek * rewardPrice / 7,
+    rewardTokenPrice: rewardPrice,
+    apr: apr.yearlyAPR,
+  };
+  
+  LoadHelper.insertVfatInfo(
+      App,
+      chefAddr,
+      poolInfo.poolToken.address,
+      poolPrices.staked_tvl,
+      poolPrices.price,
+      poolPrices.tvl,
+      [reward],
+  );
+  
   return apr;
 }

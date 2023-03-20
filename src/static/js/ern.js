@@ -3,6 +3,7 @@ consoleInit(main)
   });
 
   async function main() {
+    window.loadTracker = LoadHelper.initLoadTracker();
     const App = await init_ethers();
 
     _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -17,4 +18,5 @@ consoleInit(main)
         "ERN", "erc20", null, rewardsPerWeek, "pending");
 
     hideLoading();
+    await window.loadTracker.completeLoad();
   }

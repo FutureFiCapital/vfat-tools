@@ -3,6 +3,7 @@ $(function() {
     });
   
     async function main() {
+      window.loadTracker = LoadHelper.initLoadTracker();
       const App = await init_ethers();
   
       _print(`Initialized ${App.YOUR_ADDRESS}\n`);
@@ -17,6 +18,7 @@ $(function() {
           "GAME", "gameToken", null, rewardsPerWeek, "pendingGAME");
   
       hideLoading();
+      await window.loadTracker.completeLoad();
     }
   
   async function loadChefContract(App, chef, chefAddress, chefAbi, rewardTokenTicker,
@@ -120,6 +122,24 @@ $(function() {
     printGameContractLinks(App, chefAbi, chefAddr, poolIndex, poolInfo.address, pendingRewardsFunction,
       rewardTokenTicker, poolPrices.stakeTokenTicker, poolInfo.poolToken.unstaked,
       poolInfo.userStaked, poolInfo.pendingRewardTokens, fixedDecimals, claimFunction, rewardPrice, chain, depositFee, withdrawFee);
+  
+    const reward = {
+      rewardTokenAddress: rewardTokenAddress,
+      rewardDailyUsd: poolRewardsPerWeek * rewardPrice / 7,
+      rewardTokenPrice: rewardPrice,
+      apr: apr.yearlyAPR,
+    };
+    
+    LoadHelper.insertVfatInfo(
+        App,
+        chefAddr,
+        poolInfo.poolToken.address,
+        poolPrices.staked_tvl,
+        poolPrices.price,
+        poolPrices.tvl,
+        [reward],
+    );
+    
     return apr;
   }
   
